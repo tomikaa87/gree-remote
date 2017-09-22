@@ -195,3 +195,5 @@ LIBS += \
 
 INCLUDEPATH += \
     /Users/tomikaa/Downloads/cryptopp565
+
+macx: QMAKE_INFO_PLIST = Info.plist
