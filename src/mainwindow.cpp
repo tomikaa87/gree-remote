@@ -40,3 +40,8 @@ void MainWindow::onScanFinished()
 {
     m_scanAction->setEnabled(true);
 }
+
+void MainWindow::onBindingFinished()
+{
+
+}

@@ -6,6 +6,7 @@
 #include "devicedescriptor.h"
 
 class QUdpSocket;
+class QTimer;
 
 class Device : public QObject
 {
@@ -14,13 +15,34 @@ class Device : public QObject
 public:
     explicit Device(const DeviceDescriptor& descriptor, QObject *parent = nullptr);
 
+    void updateStatus();
+
 signals:
+    void statusUpdated();
 
 public slots:
 
 private:
-    DeviceDescriptor m_descriptor;
+    enum class State
+    {
+        Unbound,
+        Idle,
+        StatusUpdate,
+        DeviceUpdate
+    };
+
+    State m_state = State::Unbound;
+    DeviceDescriptor m_device;
     QUdpSocket* m_socket;
+    QTimer* m_pollTimer;
+
+    void openSocket();
+
+    void onPollTimerTimeout();
+    void onSocketReadyRead();
+    void deviceRequest(const QByteArray &request);
+
+    void processStatusUpdateResponse(const QByteArray& response);
 };
 
 #endif // DEVICE_H

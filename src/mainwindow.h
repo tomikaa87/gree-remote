@@ -19,6 +19,7 @@ public:
     ~MainWindow();
 
     void onScanFinished();
+    void onBindingFinished();
 
 signals:
     void scanInitiated();

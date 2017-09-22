@@ -34,7 +34,6 @@ void DeviceFinder::scan()
     }
 
     m_state = State::Scanning;
-    m_devices.clear();
 
     qCInfo(DeviceFinderLog) << "scanning started";
 
@@ -48,6 +47,35 @@ void DeviceFinder::scan()
     qCDebug(DeviceFinderLog) << "written datagram length:" << written;
 
     m_timer->start(2000);
+}
+
+const DeviceFinder::DeviceVector &DeviceFinder::availableDevices() const
+{
+    return m_descriptors;
+}
+
+QPointer<Device> DeviceFinder::getDevice(const DeviceDescriptor &descriptor)
+{
+    try
+    {
+        return m_devices.at(descriptor.id);
+    }
+    catch (std::out_of_range)
+    {
+        auto&& existing = std::find_if(m_descriptors.cbegin(), m_descriptors.cend(), [&descriptor](const DeviceDescriptor& d) {
+            return descriptor.id == d.id;
+        });
+
+        if (existing == m_descriptors.cend())
+        {
+            qCWarning(DeviceFinderLog) << "no such device:" << descriptor.id;
+            return {};
+        }
+
+        auto&& device = new Device(descriptor, this);
+        m_devices[descriptor.id] = device;
+        return device;
+    }
 }
 
 void DeviceFinder::socketReadyRead()
@@ -80,12 +108,16 @@ void DeviceFinder::timerTimeout()
 
     if (m_state == State::Scanning)
     {
+        qCInfo(DeviceFinderLog) << "scanning finished";
+
         m_state = State::Idle;
         emit scanFinshed();
         bindDevices();
     }
     else if (m_state == State::Binding)
     {
+        qCInfo(DeviceFinderLog) << "binding finished";
+
         m_state = State::Idle;
         emit bindingFinished();
     }
@@ -115,13 +147,25 @@ void DeviceFinder::processScanResponse(const QByteArray response, const QHostAdd
         return;
     }
 
+    auto&& id = pack["cid"].toString();
+
+    auto&& existing = std::find_if(m_descriptors.cbegin(), m_descriptors.cend(), [&id](const DeviceDescriptor& descriptor) {
+        return descriptor.id == id;
+    });
+
+    if (existing != m_descriptors.cend())
+    {
+        qCInfo(DeviceFinderLog) << "device already added:" << id;
+        return;
+    }
+
     DeviceDescriptor device;
-    device.id = pack["cid"].toString();
+    device.id = id;
     device.name = pack["name"].toString();
     device.address = remoteAddress;
     device.port = remotePort;
 
-    m_devices.push_back(device);
+    m_descriptors.push_back(device);
 }
 
 bool DeviceFinder::readPackFromResponse(const QJsonObject &response, QJsonObject &pack)
@@ -161,7 +205,7 @@ void DeviceFinder::bindDevices()
 
     bool hasPending = false;
 
-    std::for_each(m_devices.cbegin(), m_devices.cend(), [this, &hasPending](const DeviceDescriptor& device) {
+    std::for_each(m_descriptors.cbegin(), m_descriptors.cend(), [this, &hasPending](const DeviceDescriptor& device) {
         // Check if device is already bound
         if (device.bound)
             return;
@@ -213,11 +257,11 @@ void DeviceFinder::processBindResponse(const QByteArray &response)
         return;
     }
 
-    auto&& device = std::find_if(m_devices.begin(), m_devices.end(), [&mac](const DeviceDescriptor& dev) {
+    auto&& device = std::find_if(m_descriptors.begin(), m_descriptors.end(), [&mac](const DeviceDescriptor& dev) {
         return dev.id == mac;
     });
 
-    if (device == m_devices.end())
+    if (device == m_descriptors.end())
     {
         qCWarning(DeviceFinderLog) << "no device found for this binding response";
         return;
