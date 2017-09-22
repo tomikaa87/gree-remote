@@ -15,7 +15,7 @@ QByteArray ProtocolUtils::createBindingRequest(const DeviceDescriptor &device)
     return QJsonDocument{ json }.toJson(QJsonDocument::Compact);
 }
 
-QByteArray ProtocolUtils::createDeviceRequest(const QString &id, const QByteArray &encryptedPack, int i)
+QByteArray ProtocolUtils::createDeviceRequest(const QByteArray &encryptedPack, int i)
 {
     QJsonObject json
     {

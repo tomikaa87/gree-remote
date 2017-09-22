@@ -30,3 +30,9 @@
 *.exe
 *.out
 *.app
+
+# QtCreator files
+*.pro.user
+
+# MacOS files
+.DS_Store

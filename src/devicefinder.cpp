@@ -173,7 +173,7 @@ void DeviceFinder::bindDevices()
 
         auto&& bindingPacket = ProtocolUtils::createBindingRequest(device);
         auto&& encryptedBindingPacket = Crypto::encryptPack(bindingPacket, Crypto::GenericAESKey);
-        auto&& request = ProtocolUtils::createDeviceRequest(device.id, encryptedBindingPacket, 1);
+        auto&& request = ProtocolUtils::createDeviceRequest(encryptedBindingPacket, 1);
 
         qCDebug(DeviceFinderLog) << "sending bind request to" << device.address << ":" << device.port << ":" << request;
 

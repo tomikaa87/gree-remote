@@ -20,19 +20,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
-#DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
-
+DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-        main.cpp \
-        mainwindow.cpp \
-    crypto.cpp \
-    device.cpp \
-    devicefinder.cpp \
-    protocolutils.cpp
+    src/crypto.cpp \
+    src/device.cpp \
+    src/devicefinder.cpp \
+    src/main.cpp \
+    src/mainwindow.cpp \
+    src/protocolutils.cpp
 
 HEADERS += \
-        mainwindow.h \
     ../../../Downloads/cryptopp565/3way.h \
     ../../../Downloads/cryptopp565/adler32.h \
     ../../../Downloads/cryptopp565/aes.h \
@@ -178,17 +176,18 @@ HEADERS += \
     ../../../Downloads/cryptopp565/zdeflate.h \
     ../../../Downloads/cryptopp565/zinflate.h \
     ../../../Downloads/cryptopp565/zlib.h \
-    crypto.h \
-    devicedescriptor.h \
-    device.h \
-    devicefinder.h \
-    protocolutils.h
+    src/crypto.h \
+    src/device.h \
+    src/devicedescriptor.h \
+    src/devicefinder.h \
+    src/mainwindow.h \
+    src/protocolutils.h
 
 FORMS += \
-        mainwindow.ui
+    src/mainwindow.ui
 
 RESOURCES += \
-    res.qrc
+    resources/res.qrc
 
 LIBS += \
     -L/Users/tomikaa/Downloads/cryptopp565 \

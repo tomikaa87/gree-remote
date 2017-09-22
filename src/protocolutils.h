@@ -8,7 +8,7 @@
 namespace ProtocolUtils
 {
     QByteArray createBindingRequest(const DeviceDescriptor& device);
-    QByteArray createDeviceRequest(const QString& id, const QByteArray& encryptedPack, int i = 0);
+    QByteArray createDeviceRequest(const QByteArray& encryptedPack, int i = 0);
 }
 
 #endif // PROTOCOLUTILS_H

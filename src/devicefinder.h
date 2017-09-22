@@ -1,7 +1,7 @@
 #ifndef DEVICEHANDLER_H
 #define DEVICEHANDLER_H
 
-#include <devicedescriptor.h>
+#include "devicedescriptor.h"
 
 #include <QObject>
 #include <QByteArray>
