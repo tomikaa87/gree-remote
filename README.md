@@ -14,3 +14,4 @@ There is so much to do:
 - Create a basic view for a device model
 - Implement initial device setup (direct WiFi connection to a unit to set SSID and password of the home WiFi AP)
 - At a later phase, firmware update capability could be added
+- Command line options could be added to be able to use the app from a terminal
