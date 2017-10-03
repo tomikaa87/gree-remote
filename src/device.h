@@ -13,7 +13,10 @@ class Device : public QObject
     Q_OBJECT
 
 public:
-    explicit Device(const DeviceDescriptor& descriptor, QObject *parent = nullptr);
+    Device(const DeviceDescriptor& descriptor, QObject *parent = nullptr);
+    virtual ~Device();
+
+    const DeviceDescriptor& descritptor() const { return m_device; }
 
     void updateStatus();
 

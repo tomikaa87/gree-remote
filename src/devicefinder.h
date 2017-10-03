@@ -32,6 +32,8 @@ signals:
     void scanFinshed();
     void bindingFinished();
 
+    void deviceBound(const DeviceDescriptor& descriptor);
+
 private:
     QUdpSocket* m_socket;
     QTimer* m_timer;

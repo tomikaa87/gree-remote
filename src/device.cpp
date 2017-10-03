@@ -20,6 +20,14 @@ Device::Device(const DeviceDescriptor &descriptor, QObject *parent)
     connect(m_pollTimer, &QTimer::timeout, this, &Device::onPollTimerTimeout);
 
     qCInfo(DeviceLog) << "device controller created for" << descriptor.name << "(" << descriptor.id << ")";
+
+    m_pollTimer->start(5000);
+}
+
+Device::~Device()
+{
+    if (m_socket->isOpen())
+        m_socket->close();
 }
 
 void Device::deviceRequest(const QByteArray& request)
@@ -54,7 +62,7 @@ void Device::openSocket()
     m_socket->open(QIODevice::ReadWrite);
 
     qCDebug(DeviceLog) << m_device.id << "binding to" << m_device.address << ":" << m_device.port;
-    if (!m_socket->bind(m_device.address, m_device.port))
+    if (!m_socket->bind(m_device.address, m_device.port, QUdpSocket::ShareAddress))
     {
         qCWarning(DeviceLog) << m_device.id << "binding failed. Error:" << m_socket->errorString();
         return;
@@ -66,6 +74,8 @@ void Device::openSocket()
 void Device::onPollTimerTimeout()
 {
     qCDebug(DeviceLog) << m_device.id << "poll timer timeout";
+
+    updateStatus();
 }
 
 void Device::onSocketReadyRead()

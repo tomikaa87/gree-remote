@@ -271,4 +271,6 @@ void DeviceFinder::processBindResponse(const QByteArray &response)
     device->bound = true;
 
     qCInfo(DeviceFinderLog) << "device bound:" << mac;
+
+    emit deviceBound(*device);
 }
