@@ -37,3 +37,6 @@
 
 # MacOS files
 .DS_Store
+
+# Qt shadow build directories
+build-*

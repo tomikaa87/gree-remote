@@ -1,15 +1,16 @@
 #-------------------------------------------------
 #
-# Project created by QtCreator 2017-09-18T14:29:43
+# Project created by QtCreator 2017-10-03T19:54:03
 #
 #-------------------------------------------------
 
-QT       += core gui network
+QT       += network
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+QT       -= gui
 
-TARGET = GreeRemote
-TEMPLATE = app
+TARGET = GreeLib
+TEMPLATE = lib
+CONFIG += staticlib
 
 CONFIG += c++14
 
@@ -25,57 +26,35 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    src/main.cpp \
-    src/mainwindow.cpp \
-    src/deviceviewmodel.cpp \
-    src/deviceitem.cpp
+        src/greelib.cpp \
+        src/device.cpp \
+        src/devicefinder.cpp \
+        src/crypto.cpp \
+        src/protocolutils.cpp
 
 HEADERS += \
-    src/mainwindow.h \
-    src/deviceviewmodel.h \
-    src/deviceitem.h
-
-FORMS += \
-    src/mainwindow.ui
-
-RESOURCES += \
-    resources/res.qrc
+        include/greelib.h \
+        include/device.h \
+        include/devicefinder.h \
+        include/devicedescriptor.h \
+        src/crypto.h \
+        src/protocolutils.h
 
 INCLUDEPATH += \
-    $$PWD/GreeLib/include
+        include \
+        $$PWD/../3rdparty/cryptopp
 
 LIBS += \
-    -L$$PWD/lib \
-    -L$$PWD/3rdparty/cryptopp \
-    -lcryptopp
+        -L$$PWD/../3rdparty/cryptopp \
+        -lcryptopp
 
 CONFIG(debug, debug|release) {
     message(Debug build)
 
-    debug:DESTDIR = $$PWD/bin
+    debug:DESTDIR = $$PWD/../lib
     debug:TARGET = $$join(TARGET,,,d)
-
-    LIBS += \
-        -lGreeLibd
 } else {
     message(Release build)
 
-    release:DESTDIR = $$PWD/bin
-
-    LIBS += \
-        -lGreeLib
-}
-
-macx {
-    message(Building for macOS)
-
-    QT += macextras
-    QMAKE_INFO_PLIST = Info.plist
-    LIBS += -framework AppKit
-
-    SOURCES += \
-        src/mac/macnativelabel.mm
-
-    HEADERS += \
-        src/mac/macnativelabel.h
+    release:DESTDIR = $$PWD/../lib
 }
