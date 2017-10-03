@@ -33,6 +33,7 @@
 
 # QtCreator files
 *.pro.user
+*.autosave
 
 # MacOS files
 .DS_Store
