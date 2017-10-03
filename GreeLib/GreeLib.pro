@@ -58,3 +58,7 @@ CONFIG(debug, debug|release) {
 
     DESTDIR = $$PWD/../lib
 }
+
+macx {
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+}

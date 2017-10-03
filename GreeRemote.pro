@@ -72,6 +72,7 @@ macx {
     QT += macextras
     QMAKE_INFO_PLIST = Info.plist
     LIBS += -framework AppKit
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
 
     SOURCES += \
         src/mac/macnativelabel.mm
