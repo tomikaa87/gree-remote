@@ -52,15 +52,15 @@ LIBS += \
 CONFIG(debug, debug|release) {
     message(Debug build)
 
-    debug:DESTDIR = $$PWD/bin
-    debug:TARGET = $$join(TARGET,,,d)
+    DESTDIR = $$PWD/bin
+    TARGET = $$join(TARGET,,,d)
 
     LIBS += \
         -lGreeLibd
 } else {
     message(Release build)
 
-    release:DESTDIR = $$PWD/bin
+    DESTDIR = $$PWD/bin
 
     LIBS += \
         -lGreeLib

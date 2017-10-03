@@ -51,10 +51,10 @@ LIBS += \
 CONFIG(debug, debug|release) {
     message(Debug build)
 
-    debug:DESTDIR = $$PWD/../lib
-    debug:TARGET = $$join(TARGET,,,d)
+    DESTDIR = $$PWD/../lib
+    TARGET = $$join(TARGET,,,d)
 } else {
     message(Release build)
 
-    release:DESTDIR = $$PWD/../lib
+    DESTDIR = $$PWD/../lib
 }
