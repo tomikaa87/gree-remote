@@ -1,5 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file alias="icon">air-conditioner-3.png</file>
+        <file alias="icon-v2">fan-3.png</file>
     </qresource>
 </RCC>
