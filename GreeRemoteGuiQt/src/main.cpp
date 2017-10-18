@@ -1,5 +1,6 @@
-#include "devicefinder.h"
 #include "mainwindow.h"
+
+#include <devicefinder.h>
 
 #include <QApplication>
 #include <QLoggingCategory>
@@ -12,9 +13,12 @@ int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
 
+    a.setAttribute(Qt::AA_EnableHighDpiScaling);
+
     qCInfo(MainLog) << "initializing";
 
     MainWindow w;
+//    w.show();
 
     DeviceFinder dh;
 
@@ -23,6 +27,11 @@ int main(int argc, char *argv[])
     });
     QObject::connect(&w, &MainWindow::scanInitiated, &dh, &DeviceFinder::scan);
     QObject::connect(&dh, &DeviceFinder::scanFinshed, &w, &MainWindow::onScanFinished);
+    QObject::connect(&dh, &DeviceFinder::deviceBound, [&w, &dh](const DeviceDescriptor& descriptor) {
+        w.addDevice(dh.getDevice(descriptor));
+    });
+
+    dh.scan();
 
     auto exitCode = a.exec();
 
