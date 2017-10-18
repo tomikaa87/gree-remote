@@ -2,6 +2,7 @@
 #include "crypto.h"
 #include "protocolutils.h"
 
+#include <QJsonObject>
 #include <QLoggingCategory>
 #include <QNetworkDatagram>
 #include <QUdpSocket>
@@ -21,7 +22,7 @@ Device::Device(const DeviceDescriptor &descriptor, QObject *parent)
 
     qCInfo(DeviceLog) << "device controller created for" << descriptor.name << "(" << descriptor.id << ")";
 
-    m_pollTimer->start(5000);
+    m_pollTimer->start(2000);
 }
 
 Device::~Device()
@@ -40,6 +41,33 @@ void Device::deviceRequest(const QByteArray& request)
 void Device::processStatusUpdateResponse(const QByteArray &response)
 {
     qCDebug(DeviceLog) << "processing status update response:" << response;
+
+    QJsonObject pack;
+    if (!ProtocolUtils::readPackFromResponse(response, m_device.key, pack))
+    {
+        qCWarning(DeviceLog) << "failed read pack from status update response";
+        return;
+    }
+
+    auto&& map = ProtocolUtils::readStatusMapFromPack(pack);
+    if (map.isEmpty())
+    {
+        qCWarning(DeviceLog) << "failed process status update";
+        return;
+    }
+
+    m_powered = map["Pow"] == 1;
+    m_health = map["Health"] == 1;
+    m_turbo = map["Tur"] == 1;
+    m_quiet = map["Quiet"] == 1;
+    m_light = map["Lig"] == 1;
+    m_mode = map["Mod"];
+    m_temperature = map["SetTem"];
+    m_fanSpeed = map["WdSpd"];
+    m_verticalSwing = map["SwUpDn"];
+    m_horizontalSwing = map["SwingLfRig"];
+
+    emit statusUpdated();
 }
 
 void Device::updateStatus()

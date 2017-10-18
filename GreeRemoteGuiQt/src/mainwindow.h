@@ -5,6 +5,7 @@
 #include <QPointer>
 
 class Device;
+class DeviceFinder;
 class QAction;
 class QSystemTrayIcon;
 
@@ -17,7 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget *parent = 0);
+    MainWindow(DeviceFinder& deviceFinder, QWidget *parent = 0);
     ~MainWindow();
 
     void addDevice(const QPointer<Device>& device);
@@ -33,9 +34,18 @@ private:
     QSystemTrayIcon* m_trayIcon;
     QAction* m_scanAction;
     QAction* m_separatorAction;
+    DeviceFinder& m_deviceFinder;
 
     void createDeviceMenuItem(const QPointer<Device>& device);
     void onLabelLinkClicked(const QString& link);
+
+    // For testing
+    QPointer<Device> m_selectedDevice;
+    void createDeviceTableEntry(const QPointer<Device>& device);
+    void selectTestDevice(const QString& id);
+    void updateTestDeviceStatus();
+    void onScanButtonClicked();
+    void onComboBoxIndexChanged(int index);
 };
 
 #endif // MAINWINDOW_H

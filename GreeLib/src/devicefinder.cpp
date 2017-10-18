@@ -56,24 +56,29 @@ const DeviceFinder::DeviceVector &DeviceFinder::availableDevices() const
 
 QPointer<Device> DeviceFinder::getDevice(const DeviceDescriptor &descriptor)
 {
+    return getDeviceById(descriptor.id);
+}
+
+QPointer<Device> DeviceFinder::getDeviceById(const QString& id)
+{
     try
     {
-        return m_devices.at(descriptor.id);
+        return m_devices.at(id);
     }
     catch (std::out_of_range)
     {
-        auto&& existing = std::find_if(m_descriptors.cbegin(), m_descriptors.cend(), [&descriptor](const DeviceDescriptor& d) {
-            return descriptor.id == d.id;
+        auto&& existing = std::find_if(m_descriptors.cbegin(), m_descriptors.cend(), [&id](const DeviceDescriptor& d) {
+            return id == d.id;
         });
 
         if (existing == m_descriptors.cend())
         {
-            qCWarning(DeviceFinderLog) << "no such device:" << descriptor.id;
+            qCWarning(DeviceFinderLog) << "no descriptor found for the device ID" << id;
             return {};
         }
 
-        auto&& device = new Device(descriptor, this);
-        m_devices[descriptor.id] = device;
+        auto&& device = new Device(*existing, this);
+        m_devices[id] = device;
         return device;
     }
 }
@@ -131,17 +136,8 @@ void DeviceFinder::processScanResponse(const QByteArray response, const QHostAdd
 {
     qCDebug(DeviceFinderLog) << "processing scan response" << response;
 
-    QJsonParseError parseError;
-    auto&& jsonDocument = QJsonDocument::fromJson(response, &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qCWarning(DeviceFinderLog) << "response doesn't contain a valid JSON object. Parse error:" << parseError.errorString();
-        return;
-    }
-
-    auto&& json = jsonDocument.object();
     QJsonObject pack;
-    if (!readPackFromResponse(json, pack))
+    if (!ProtocolUtils::readPackFromResponse(response, Crypto::GenericAESKey, pack))
     {
         qCWarning(DeviceFinderLog) << "failed to read pack from response";
         return;
@@ -166,31 +162,6 @@ void DeviceFinder::processScanResponse(const QByteArray response, const QHostAdd
     device.port = remotePort;
 
     m_descriptors.push_back(device);
-}
-
-bool DeviceFinder::readPackFromResponse(const QJsonObject &response, QJsonObject &pack)
-{
-    auto&& encryptedPack = response["pack"].toString();
-    if (encryptedPack.isEmpty())
-    {
-        qCWarning(DeviceFinderLog) << "response doesn't have a pack, which is mandatory";
-        return false;
-    }
-
-    auto&& decryptedPack = Crypto::decryptPack(encryptedPack.toUtf8(), Crypto::GenericAESKey);
-    qCDebug(DeviceFinderLog) << "decrypted pack:" << decryptedPack;
-
-    QJsonParseError parseError;
-    auto&& jsonDocument = QJsonDocument::fromJson(decryptedPack, &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qCWarning(DeviceFinderLog) << "decrypted pack doesn't contain a valid JSON object. Parse error:" << parseError.errorString();
-        return false;
-    }
-
-    pack = jsonDocument.object();
-
-    return true;
 }
 
 void DeviceFinder::bindDevices()
@@ -230,17 +201,10 @@ void DeviceFinder::bindDevices()
 
 void DeviceFinder::processBindResponse(const QByteArray &response)
 {
-    QJsonParseError parseError;
-    auto&& jsonDocument = QJsonDocument::fromJson(response, &parseError);
-    if (parseError.error != QJsonParseError::NoError)
-    {
-        qCWarning(DeviceFinderLog) << "response doesn't contain a valid JSON object. Parse error:" << parseError.errorString();
-        return;
-    }
+    qCDebug(DeviceFinderLog) << "processing bind response:" << response;
 
-    auto&& json = jsonDocument.object();
     QJsonObject pack;
-    if (!readPackFromResponse(json, pack))
+    if (!ProtocolUtils::readPackFromResponse(response, Crypto::GenericAESKey, pack))
     {
         qCWarning(DeviceFinderLog) << "failed to read pack from response";
         return;

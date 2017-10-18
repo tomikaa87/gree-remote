@@ -27,6 +27,7 @@ public:
     const DeviceVector& availableDevices() const;
 
     QPointer<Device> getDevice(const DeviceDescriptor& descriptor);
+    QPointer<Device> getDeviceById(const QString& id);
 
 signals:
     void scanFinshed();
@@ -53,7 +54,6 @@ private:
     void timerTimeout();
 
     void processScanResponse(const QByteArray response, const QHostAddress &remoteAddress, uint16_t remotePort);
-    bool readPackFromResponse(const QJsonObject& response, QJsonObject& pack);
 
     void bindDevices();
     void processBindResponse(const QByteArray& response);

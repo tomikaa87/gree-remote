@@ -17,10 +17,10 @@ int main(int argc, char *argv[])
 
     qCInfo(MainLog) << "initializing";
 
-    MainWindow w;
-//    w.show();
-
     DeviceFinder dh;
+
+    MainWindow w(dh);
+    w.show();
 
     QObject::connect(&dh, &DeviceFinder::scanFinshed, [] {
         qCInfo(MainLog) << "scanning finished";
