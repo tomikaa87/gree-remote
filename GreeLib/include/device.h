@@ -26,22 +26,33 @@ public:
     bool isQuietModeEnabled() const { return m_quiet; }
     bool isLightEnabled() const { return m_light; }
 
+    void setPoweredOn(bool on);
+    void setHealthEnabled(bool enabled);
+    void setTurboEnabled(bool enabled);
+    void setQuietModeEnabled(bool enabled);
+    void setLightEnabled(bool enabled);
+
     // Auto: 0, Cool: 1, Dry: 2, Fan: 3, Heat: 4
     int mode() const { return m_mode; }
+    void setMode(int mode);
 
     // In Celsius
     int temperature() const { return m_temperature; }
+    void setTemperature(int temperature);
 
     // Auto: 0, 1-5 (or 1-3-5 for 3-speed)
     int fanSpeed() const { return m_fanSpeed; }
+    void setFanSpeed(int speed);
 
     // Default: 0, Full swipe: 1,
     // Static, from the upmost position: 1/5: 2, 2/5: 3, 3/5: 4, 4/5: 5, 5/5: 6
     // Scan, from the upmost region: 1/3: 11, 2/3: 9, 3/3: 7 (probably there are more steps, maybe 5, for 8 and 10)
-    int verticalSwing() const { return m_verticalSwing; }
+    int verticalSwingMode() const { return m_verticalSwingMode; }
+    void setVerticalSwingMode(int mode);
 
     // Default: 0
-    int horizontalSwing() const { return m_horizontalSwing; }
+    int horizontalSwingMode() const { return m_horizontalSwingMode; }
+    void setHorizontalSwingMode(int mode);
 
 signals:
     void statusUpdated();
@@ -70,8 +81,8 @@ private:
     int m_mode = 0;
     int m_temperature = 0;
     int m_fanSpeed = 0;
-    int m_verticalSwing = 0;
-    int m_horizontalSwing = 0;
+    int m_verticalSwingMode = 0;
+    int m_horizontalSwingMode = 0;
 
     void openSocket();
 

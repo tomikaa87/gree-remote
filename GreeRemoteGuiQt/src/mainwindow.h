@@ -41,11 +41,18 @@ private:
 
     // For testing
     QPointer<Device> m_selectedDevice;
+
     void createDeviceTableEntry(const QPointer<Device>& device);
     void selectTestDevice(const QString& id);
     void updateTestDeviceStatus();
+
     void onScanButtonClicked();
     void onComboBoxIndexChanged(int index);
+    void onPowerCheckBoxClicked();
+    void onHealthModeCheckBoxClicked();
+    void onTurboModeCheckBoxClicked();
+    void onQuietModeCheckBoxClicked();
+    void onLightCheckBoxClicked();
 };
 
 #endif // MAINWINDOW_H

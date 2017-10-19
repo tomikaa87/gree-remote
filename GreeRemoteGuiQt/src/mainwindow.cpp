@@ -25,6 +25,11 @@ MainWindow::MainWindow(DeviceFinder& deviceFinder, QWidget *parent)
     connect(ui->scanButton, &QPushButton::clicked, this, &MainWindow::onScanButtonClicked);
     connect(ui->deviceComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged),
             this, &MainWindow::onComboBoxIndexChanged);
+    connect(ui->powerOnCheckBox, &QCheckBox::clicked, this, &MainWindow::onPowerCheckBoxClicked);
+    connect(ui->healthModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onHealthModeCheckBoxClicked);
+    connect(ui->turboModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onTurboModeCheckBoxClicked);
+    connect(ui->quietModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onQuietModeCheckBoxClicked);
+    connect(ui->lightCheckBox, &QCheckBox::clicked, this, &MainWindow::onLightCheckBoxClicked);
 
     connect(ui->flaticonCreditsLabel, &QLabel::linkActivated, this, &MainWindow::onLabelLinkClicked);
 
@@ -190,6 +195,7 @@ void MainWindow::updateTestDeviceStatus()
     if (m_selectedDevice.isNull())
         return;
 
+    // Status display
     ui->powerStateLabel->setText(m_selectedDevice->isPoweredOn() ? "On" : "Off");
     ui->healthStatusLabel->setText(m_selectedDevice->isHealthEnabled() ? "On" : "Off");
     ui->turboModeStatusLabel->setText(m_selectedDevice->isTurboEnabled() ? "On" : "Off");
@@ -198,8 +204,18 @@ void MainWindow::updateTestDeviceStatus()
     ui->modeLabel->setText(QString::number(m_selectedDevice->mode()));
     ui->temperatureLabel->setText(QString::number(m_selectedDevice->temperature()));
     ui->fanSpeedLabel->setText(QString::number(m_selectedDevice->fanSpeed()));
-    ui->horizontalSwingLabel->setText(QString::number(m_selectedDevice->horizontalSwing()));
-    ui->verticalSwingLabel->setText(QString::number(m_selectedDevice->verticalSwing()));
+    ui->horizontalSwingLabel->setText(QString::number(m_selectedDevice->horizontalSwingMode()));
+    ui->verticalSwingLabel->setText(QString::number(m_selectedDevice->verticalSwingMode()));
+
+    // Device control
+    ui->modeComboBox->setCurrentIndex(m_selectedDevice->mode());
+    ui->temperatureSpinBox->setValue(m_selectedDevice->temperature());
+    ui->verticalSwingModeComboBox->setCurrentIndex(m_selectedDevice->verticalSwingMode());
+    ui->healthModeCheckBox->setChecked(m_selectedDevice->isHealthEnabled());
+    ui->turboModeCheckBox->setChecked(m_selectedDevice->isTurboEnabled());
+    ui->quietModeCheckBox->setChecked(m_selectedDevice->isQuietModeEnabled());
+    ui->lightCheckBox->setChecked(m_selectedDevice->isLightEnabled());
+    ui->powerOnCheckBox->setChecked(m_selectedDevice->isPoweredOn());
 }
 
 void MainWindow::onScanButtonClicked()
@@ -211,4 +227,34 @@ void MainWindow::onScanButtonClicked()
 void MainWindow::onComboBoxIndexChanged(int)
 {
     selectTestDevice(ui->deviceComboBox->currentData().toString());
+}
+
+void MainWindow::onPowerCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setPoweredOn(ui->powerOnCheckBox->isChecked());
+}
+
+void MainWindow::onHealthModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setHealthEnabled(ui->healthModeCheckBox->isChecked());
+}
+
+void MainWindow::onTurboModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setTurboEnabled(ui->turboModeCheckBox->isChecked());
+}
+
+void MainWindow::onQuietModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setQuietModeEnabled(ui->quietModeCheckBox->isChecked());
+}
+
+void MainWindow::onLightCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setLightEnabled(ui->lightCheckBox->isChecked());
 }

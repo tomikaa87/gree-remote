@@ -64,8 +64,8 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     m_mode = map["Mod"];
     m_temperature = map["SetTem"];
     m_fanSpeed = map["WdSpd"];
-    m_verticalSwing = map["SwUpDn"];
-    m_horizontalSwing = map["SwingLfRig"];
+    m_verticalSwingMode = map["SwUpDn"];
+    m_horizontalSwingMode = map["SwingLfRig"];
 
     emit statusUpdated();
 }
@@ -79,6 +79,51 @@ void Device::updateStatus()
     m_state = State::StatusUpdate;
 
     deviceRequest(request);
+}
+
+void Device::setPoweredOn(bool on)
+{
+
+}
+
+void Device::setHealthEnabled(bool enabled)
+{
+
+}
+
+void Device::setTurboEnabled(bool enabled)
+{
+
+}
+
+void Device::setQuietModeEnabled(bool enabled)
+{
+
+}
+
+void Device::setLightEnabled(bool enabled)
+{
+
+}
+
+void Device::setMode(int mode)
+{
+
+}
+
+void Device::setTemperature(int temperature)
+{
+
+}
+
+void Device::setFanSpeed(int speed)
+{
+
+}
+
+void Device::setVerticalSwingMode(int mode)
+{
+
 }
 
 void Device::openSocket()
