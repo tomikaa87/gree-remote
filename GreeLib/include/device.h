@@ -45,8 +45,8 @@ public:
     void setFanSpeed(int speed);
 
     // Default: 0, Full swipe: 1,
-    // Static, from the upmost position: 1/5: 2, 2/5: 3, 3/5: 4, 4/5: 5, 5/5: 6
-    // Scan, from the upmost region: 1/3: 11, 2/3: 9, 3/3: 7 (probably there are more steps, maybe 5, for 8 and 10)
+    // Fix, from the uppermost position: 1/5: 2, 2/5: 3, 3/5: 4, 4/5: 5, 5/5: 6
+    // Swing, from the uppermost region: 1/3: 11, 2/3: 9, 3/3: 7 (probably there are more steps, maybe 5, for 8 and 10)
     int verticalSwingMode() const { return m_verticalSwingMode; }
     void setVerticalSwingMode(int mode);
 
