@@ -70,8 +70,32 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     emit statusUpdated();
 }
 
+void Device::processCommandResponse(const QByteArray& response)
+{
+    qCDebug(DeviceLog) << "processing status update response:" << response;
+
+    QJsonObject pack;
+    if (!ProtocolUtils::readPackFromResponse(response, m_device.key, pack))
+    {
+        qCWarning(DeviceLog) << "failed read pack from status update response";
+        return;
+    }
+
+    if (pack["r"] != 200)
+    {
+        qCWarning(DeviceLog) << "command failed. Result:" << pack["r"];
+        return;
+    }
+}
+
 void Device::updateStatus()
 {
+    if (m_state != State::Idle)
+    {
+        qCWarning(DeviceLog) << "device is busy";
+        return;
+    }
+
     auto&& pack = ProtocolUtils::createDeviceStatusRequestPack(m_device.id);
     auto&& encryptedPack = Crypto::encryptPack(pack, m_device.key);
     auto&& request = ProtocolUtils::createDeviceRequest(encryptedPack, 0);
@@ -83,7 +107,9 @@ void Device::updateStatus()
 
 void Device::setPoweredOn(bool on)
 {
-
+    setParameters(ParameterMap{
+        { "Pow", on ? 1 : 0 }
+    });
 }
 
 void Device::setHealthEnabled(bool enabled)
@@ -113,7 +139,10 @@ void Device::setMode(int mode)
 
 void Device::setTemperature(int temperature)
 {
-
+    setParameters(ParameterMap{
+        { "TemUn", 0 },
+        { "SetTem", temperature }
+    });
 }
 
 void Device::setFanSpeed(int speed)
@@ -124,6 +153,17 @@ void Device::setFanSpeed(int speed)
 void Device::setVerticalSwingMode(int mode)
 {
 
+}
+
+void Device::setParameters(const Device::ParameterMap& parameters)
+{
+    auto&& pack = ProtocolUtils::createDeviceCommandPack(parameters);
+    auto&& encryptedPack = Crypto::encryptPack(pack, m_device.key);
+    auto&& request = ProtocolUtils::createDeviceRequest(encryptedPack, 0);
+
+    m_state = State::Command;
+
+    deviceRequest(request);
 }
 
 void Device::openSocket()
@@ -161,6 +201,11 @@ void Device::onSocketReadyRead()
     if (m_state == State::StatusUpdate)
     {
         processStatusUpdateResponse(datagram.data());
+        m_state = State::Idle;
+    }
+    else if (m_state == State::Command)
+    {
+        processCommandResponse(datagram.data());
         m_state = State::Idle;
     }
 }

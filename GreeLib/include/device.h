@@ -2,6 +2,7 @@
 #define DEVICE_H
 
 #include <QObject>
+#include <QMap>
 
 #include "devicedescriptor.h"
 
@@ -54,6 +55,9 @@ public:
     int horizontalSwingMode() const { return m_horizontalSwingMode; }
     void setHorizontalSwingMode(int mode);
 
+    using ParameterMap = QMap<QString, int>;
+    void setParameters(const ParameterMap& parameters);
+
 signals:
     void statusUpdated();
 
@@ -65,10 +69,10 @@ private:
         Unbound,
         Idle,
         StatusUpdate,
-        DeviceUpdate
+        Command
     };
 
-    State m_state = State::Unbound;
+    State m_state = State::Idle;
     DeviceDescriptor m_device;
     QUdpSocket* m_socket;
     QTimer* m_pollTimer;
@@ -91,6 +95,7 @@ private:
     void deviceRequest(const QByteArray &request);
 
     void processStatusUpdateResponse(const QByteArray& response);
+    void processCommandResponse(const QByteArray& response);
 };
 
 #endif // DEVICE_H

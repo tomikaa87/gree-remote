@@ -1,6 +1,8 @@
 #include "protocolutils.h"
 #include "crypto.h"
 
+#include <algorithm>
+
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -106,7 +108,7 @@ bool ProtocolUtils::readPackFromResponse(const QByteArray& response,
     return true;
 }
 
-ProtocolUtils::DeviceStatusMap ProtocolUtils::readStatusMapFromPack(const QJsonObject& pack)
+ProtocolUtils::DeviceParameterMap ProtocolUtils::readStatusMapFromPack(const QJsonObject& pack)
 {
     if (pack["t"] != "dat")
     {
@@ -148,9 +150,35 @@ ProtocolUtils::DeviceStatusMap ProtocolUtils::readStatusMapFromPack(const QJsonO
         return{};
     }
 
-    DeviceStatusMap map;
+    DeviceParameterMap map;
     for (int i = 0; i < colsArray.size(); i++)
         map[colsArray[i].toString()] = datArray[i].toInt();
 
     return map;
+}
+
+QByteArray ProtocolUtils::createDeviceCommandPack(const ProtocolUtils::DeviceParameterMap& parameters)
+{
+    if (parameters.isEmpty())
+        return{};
+
+    QVariantList values;
+    auto&& pvals = parameters.values();
+
+    std::transform(std::begin(pvals),
+                   std::end(pvals),
+                   std::back_inserter(values),
+                   [](int value)
+    {
+        return QVariant{ value };
+    });
+
+    QJsonObject json
+    {
+        { "opt", QJsonArray::fromStringList(parameters.keys()) },
+        { "p", QJsonArray::fromVariantList(values) },
+        { "t", "cmd" }
+    };
+
+    return QJsonDocument{ json }.toJson(QJsonDocument::Compact);
 }
