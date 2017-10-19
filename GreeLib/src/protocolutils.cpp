@@ -40,6 +40,8 @@ QByteArray ProtocolUtils::createDeviceRequest(const QByteArray &encryptedPack, i
 
 QByteArray ProtocolUtils::createDeviceStatusRequestPack(const QString& id)
 {
+    // TODO move these keys to constants
+
     QJsonObject json
     {
         { "cols", QJsonArray {
@@ -168,10 +170,7 @@ QByteArray ProtocolUtils::createDeviceCommandPack(const ProtocolUtils::DevicePar
     std::transform(std::begin(pvals),
                    std::end(pvals),
                    std::back_inserter(values),
-                   [](int value)
-    {
-        return QVariant{ value };
-    });
+                   [](int value) { return QVariant{ value }; });
 
     QJsonObject json
     {

@@ -86,6 +86,8 @@ void Device::processCommandResponse(const QByteArray& response)
         qCWarning(DeviceLog) << "command failed. Result:" << pack["r"];
         return;
     }
+
+    // TODO handle new values in the response
 }
 
 void Device::updateStatus()
