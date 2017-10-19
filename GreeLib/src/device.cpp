@@ -72,12 +72,12 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
 
 void Device::processCommandResponse(const QByteArray& response)
 {
-    qCDebug(DeviceLog) << "processing status update response:" << response;
+    qCDebug(DeviceLog) << "processing command response:" << response;
 
     QJsonObject pack;
     if (!ProtocolUtils::readPackFromResponse(response, m_device.key, pack))
     {
-        qCWarning(DeviceLog) << "failed read pack from status update response";
+        qCWarning(DeviceLog) << "failed read pack from command response";
         return;
     }
 
@@ -129,7 +129,9 @@ void Device::setQuietModeEnabled(bool enabled)
 
 void Device::setLightEnabled(bool enabled)
 {
-
+    setParameters(ParameterMap{
+        { "Lig", enabled ? 1 : 0 }
+    });
 }
 
 void Device::setMode(int mode)
