@@ -62,6 +62,7 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     m_quiet = map["Quiet"] == 1;
     m_light = map["Lig"] == 1;
     m_xfanEnabled = map["Blo"] == 1;
+    m_airModeEnabled = map["Air"] == 1;
     m_mode = map["Mod"];
     m_temperature = map["SetTem"];
     m_fanSpeed = map["WdSpd"];
@@ -124,6 +125,13 @@ void Device::setXfanBlowEnabled(bool enabled)
 {
     setParameters(ParameterMap{
         { "Blo", enabled ? 1 : 0 }
+                  });
+}
+
+void Device::setAirModeEnabled(bool enabled)
+{
+    setParameters(ParameterMap{
+        { "Air", enabled ? 1 : 0 }
     });
 }
 

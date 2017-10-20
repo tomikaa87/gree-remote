@@ -22,21 +22,34 @@ public:
     void updateStatus();
 
     bool isPoweredOn() const { return m_powered; }
-    bool isHealthEnabled() const { return m_health; }
-    bool isTurboEnabled() const { return m_turbo; }
-    bool isQuietModeEnabled() const { return m_quiet; }
-    bool isLightEnabled() const { return m_light; }
+    void setPoweredOn(bool on);
 
-    // X-Fan or Blow function keeps the fan running for a few (maybe 10)
-    // minutes after the unit has been turned off. Effective in Heat and Cool mode.
+    // Turns indicators on the indoor unit on or off.
+    bool isLightEnabled() const { return m_light; }
+    void setLightEnabled(bool enabled);
+
+    // Decreases fan speed to the minimum. Not available in Dry and Fan modes.
+    bool isQuietModeEnabled() const { return m_quiet; }
+    void setQuietModeEnabled(bool enabled);
+
+    // "Cold Plasma" mode, only for devices with "anion generator".
+    // Absorbs dust and kills bacteria.
+    bool isHealthEnabled() const { return m_health; }
+    void setHealthEnabled(bool enabled);
+
+    // Turbo mode sets fan speed to the maximum in Cool or Heat mode.
+    // Setting fan speed while this mode is enabled will be ignored.
+    bool isTurboEnabled() const { return m_turbo; }
+    void setTurboEnabled(bool enabled);
+
+    // X-Fan or Blow function keeps the fan running for a while
+    // after the unit has been turned off. Effective in Dry and Cool mode.
     bool isXfanBlowEnabled() const { return m_xfanEnabled; }
     void setXfanBlowEnabled(bool enabled);
 
-    void setPoweredOn(bool on);
-    void setHealthEnabled(bool enabled);
-    void setTurboEnabled(bool enabled);
-    void setQuietModeEnabled(bool enabled);
-    void setLightEnabled(bool enabled);
+    // TODO At the moment I don't have any documentation for "Air" mode
+    bool isAirModeEnabled() const { return m_airModeEnabled; }
+    void setAirModeEnabled(bool enabled);
 
     // Auto: 0, Cool: 1, Dry: 2, Fan: 3, Heat: 4
     int mode() const { return m_mode; }
@@ -88,6 +101,7 @@ private:
     bool m_light = false;
     bool m_quiet = false;
     bool m_xfanEnabled = false;
+    bool m_airModeEnabled = false;
     int m_mode = 0;
     int m_temperature = 0;
     int m_fanSpeed = 0;

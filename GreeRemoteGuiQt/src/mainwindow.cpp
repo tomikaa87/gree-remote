@@ -38,6 +38,7 @@ MainWindow::MainWindow(DeviceFinder& deviceFinder, QWidget *parent)
             this, &MainWindow::onVerticalSwingModeComboBoxActivated);
     connect(ui->setTempButton, &QPushButton::clicked, this, &MainWindow::onSetTempButtonClicked);
     connect(ui->xfanCheckBox, &QCheckBox::clicked, this, &MainWindow::onXfanCheckBoxClicked);
+    connect(ui->airModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onAirModeCheckBoxClicked);
 
     connect(ui->flaticonCreditsLabel, &QLabel::linkActivated, this, &MainWindow::onLabelLinkClicked);
 
@@ -215,6 +216,7 @@ void MainWindow::updateTestDeviceStatus()
     ui->horizontalSwingLabel->setText(QString::number(m_selectedDevice->horizontalSwingMode()));
     ui->verticalSwingLabel->setText(QString::number(m_selectedDevice->verticalSwingMode()));
     ui->xfanStatusLabel->setText(m_selectedDevice->isXfanBlowEnabled() ? "On" : "Off");
+    ui->airModeStatusLabel->setText(m_selectedDevice->isAirModeEnabled() ? "On" : "Off");
 
     // Device control
     ui->modeComboBox->setCurrentIndex(m_selectedDevice->mode());
@@ -227,6 +229,7 @@ void MainWindow::updateTestDeviceStatus()
     ui->powerOnCheckBox->setChecked(m_selectedDevice->isPoweredOn());
     ui->fanSpeedComboBox->setCurrentIndex(m_selectedDevice->fanSpeed());
     ui->xfanCheckBox->setChecked(m_selectedDevice->isXfanBlowEnabled());
+    ui->airModeCheckBox->setChecked(m_selectedDevice->isAirModeEnabled());
 }
 
 void MainWindow::onScanButtonClicked()
@@ -298,4 +301,10 @@ void MainWindow::onXfanCheckBoxClicked()
 {
     if (m_selectedDevice)
         m_selectedDevice->setXfanBlowEnabled(ui->xfanCheckBox->isChecked());
+}
+
+void MainWindow::onAirModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setAirModeEnabled(ui->airModeCheckBox->isChecked());
 }

@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>775</width>
-    <height>659</height>
+    <height>707</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -225,7 +225,37 @@
                </property>
               </widget>
              </item>
+             <item row="6" column="0">
+              <widget class="QLabel" name="label_17">
+               <property name="text">
+                <string>Air Mode (?):</string>
+               </property>
+              </widget>
+             </item>
+             <item row="6" column="1">
+              <widget class="QLabel" name="airModeStatusLabel">
+               <property name="text">
+                <string>Unknown</string>
+               </property>
+              </widget>
+             </item>
             </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_6">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Maximum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
            </item>
            <item>
             <layout class="QFormLayout" name="formLayout_4">
@@ -536,6 +566,22 @@
             </layout>
            </item>
            <item>
+            <spacer name="horizontalSpacer_7">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Maximum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <layout class="QVBoxLayout" name="verticalLayout">
              <item>
               <widget class="QCheckBox" name="powerOnCheckBox">
@@ -576,6 +622,13 @@
               <widget class="QCheckBox" name="xfanCheckBox">
                <property name="text">
                 <string>X-Fan (Blow)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="airModeCheckBox">
+               <property name="text">
+                <string>Air Mode (?)</string>
                </property>
               </widget>
              </item>
