@@ -27,6 +27,11 @@ public:
     bool isQuietModeEnabled() const { return m_quiet; }
     bool isLightEnabled() const { return m_light; }
 
+    // X-Fan or Blow function keeps the fan running for a few (maybe 10)
+    // minutes after the unit has been turned off. Effective in Heat and Cool mode.
+    bool isXfanBlowEnabled() const { return m_xfanEnabled; }
+    void setXfanBlowEnabled(bool enabled);
+
     void setPoweredOn(bool on);
     void setHealthEnabled(bool enabled);
     void setTurboEnabled(bool enabled);
@@ -82,6 +87,7 @@ private:
     bool m_turbo = false;
     bool m_light = false;
     bool m_quiet = false;
+    bool m_xfanEnabled = false;
     int m_mode = 0;
     int m_temperature = 0;
     int m_fanSpeed = 0;

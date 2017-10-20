@@ -57,6 +57,7 @@ private:
     void onFanSpeedComboBoxActivated(int index);
     void onVerticalSwingModeComboBoxActivated(int index);
     void onSetTempButtonClicked();
+    void onXfanCheckBoxClicked();
 };
 
 #endif // MAINWINDOW_H
