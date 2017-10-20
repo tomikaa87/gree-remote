@@ -68,6 +68,8 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     m_fanSpeed = map["WdSpd"];
     m_verticalSwingMode = map["SwUpDn"];
     m_horizontalSwingMode = map["SwingLfRig"];
+    m_sleepModeEnabled = map["SwhSlp"];
+    m_savingModeEnabled = map["SvSt"];
 
     emit statusUpdated();
 }
@@ -125,13 +127,27 @@ void Device::setXfanBlowEnabled(bool enabled)
 {
     setParameters(ParameterMap{
         { "Blo", enabled ? 1 : 0 }
-                  });
+    });
 }
 
 void Device::setAirModeEnabled(bool enabled)
 {
     setParameters(ParameterMap{
         { "Air", enabled ? 1 : 0 }
+                  });
+}
+
+void Device::setSleepModeEnabled(bool enabled)
+{
+    setParameters(ParameterMap{
+        { "SwhSlp", enabled ? 1 : 0 }
+    });
+}
+
+void Device::setSavingModeEnabled(bool enabled)
+{
+    setParameters(ParameterMap{
+        { "SvSt", enabled ? 1 : 0 }
     });
 }
 

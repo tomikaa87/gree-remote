@@ -39,6 +39,8 @@ MainWindow::MainWindow(DeviceFinder& deviceFinder, QWidget *parent)
     connect(ui->setTempButton, &QPushButton::clicked, this, &MainWindow::onSetTempButtonClicked);
     connect(ui->xfanCheckBox, &QCheckBox::clicked, this, &MainWindow::onXfanCheckBoxClicked);
     connect(ui->airModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onAirModeCheckBoxClicked);
+    connect(ui->sleepModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onSleepModeCheckBoxClicked);
+    connect(ui->savingModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onSavingModeCheckBoxClicked);
 
     connect(ui->flaticonCreditsLabel, &QLabel::linkActivated, this, &MainWindow::onLabelLinkClicked);
 
@@ -217,6 +219,8 @@ void MainWindow::updateTestDeviceStatus()
     ui->verticalSwingLabel->setText(QString::number(m_selectedDevice->verticalSwingMode()));
     ui->xfanStatusLabel->setText(m_selectedDevice->isXfanBlowEnabled() ? "On" : "Off");
     ui->airModeStatusLabel->setText(m_selectedDevice->isAirModeEnabled() ? "On" : "Off");
+    ui->sleepModeStatusLabel->setText(m_selectedDevice->isSleepModeEnabled() ? "On" : "Off");
+    ui->savingModeStatusLabel->setText(m_selectedDevice->isSavingModeEnabled() ? "On" : "Off");
 
     // Device control
     ui->modeComboBox->setCurrentIndex(m_selectedDevice->mode());
@@ -230,6 +234,8 @@ void MainWindow::updateTestDeviceStatus()
     ui->fanSpeedComboBox->setCurrentIndex(m_selectedDevice->fanSpeed());
     ui->xfanCheckBox->setChecked(m_selectedDevice->isXfanBlowEnabled());
     ui->airModeCheckBox->setChecked(m_selectedDevice->isAirModeEnabled());
+    ui->sleepModeCheckBox->setChecked(m_selectedDevice->isSleepModeEnabled());
+    ui->savingModeCheckBox->setChecked(m_selectedDevice->isSavingModeEnabled());
 }
 
 void MainWindow::onScanButtonClicked()
@@ -307,4 +313,16 @@ void MainWindow::onAirModeCheckBoxClicked()
 {
     if (m_selectedDevice)
         m_selectedDevice->setAirModeEnabled(ui->airModeCheckBox->isChecked());
+}
+
+void MainWindow::onSleepModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setSleepModeEnabled(ui->sleepModeCheckBox->isChecked());
+}
+
+void MainWindow::onSavingModeCheckBoxClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setSavingModeEnabled(ui->savingModeCheckBox->isChecked());
 }

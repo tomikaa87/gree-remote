@@ -59,6 +59,8 @@ private:
     void onSetTempButtonClicked();
     void onXfanCheckBoxClicked();
     void onAirModeCheckBoxClicked();
+    void onSleepModeCheckBoxClicked();
+    void onSavingModeCheckBoxClicked();
 };
 
 #endif // MAINWINDOW_H

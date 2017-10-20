@@ -211,29 +211,77 @@
                </property>
               </widget>
              </item>
-             <item row="5" column="0">
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_8">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Maximum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QFormLayout" name="formLayout_2">
+             <item row="0" column="0">
               <widget class="QLabel" name="label_16">
                <property name="text">
                 <string>X-Fan (Blow):</string>
                </property>
               </widget>
              </item>
-             <item row="5" column="1">
+             <item row="0" column="1">
               <widget class="QLabel" name="xfanStatusLabel">
                <property name="text">
                 <string>Unknown</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="0">
+             <item row="1" column="0">
               <widget class="QLabel" name="label_17">
                <property name="text">
                 <string>Air Mode (?):</string>
                </property>
               </widget>
              </item>
-             <item row="6" column="1">
+             <item row="1" column="1">
               <widget class="QLabel" name="airModeStatusLabel">
+               <property name="text">
+                <string>Unknown</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="0">
+              <widget class="QLabel" name="label_18">
+               <property name="text">
+                <string>Sleep Mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="0">
+              <widget class="QLabel" name="label_19">
+               <property name="text">
+                <string>Saving Mode:</string>
+               </property>
+              </widget>
+             </item>
+             <item row="2" column="1">
+              <widget class="QLabel" name="sleepModeStatusLabel">
+               <property name="text">
+                <string>Unknown</string>
+               </property>
+              </widget>
+             </item>
+             <item row="3" column="1">
+              <widget class="QLabel" name="savingModeStatusLabel">
                <property name="text">
                 <string>Unknown</string>
                </property>
@@ -618,6 +666,26 @@
                </property>
               </widget>
              </item>
+            </layout>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_9">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeType">
+              <enum>QSizePolicy::Maximum</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>10</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
+            <layout class="QVBoxLayout" name="verticalLayout_2">
              <item>
               <widget class="QCheckBox" name="xfanCheckBox">
                <property name="text">
@@ -629,6 +697,20 @@
               <widget class="QCheckBox" name="airModeCheckBox">
                <property name="text">
                 <string>Air Mode (?)</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="sleepModeCheckBox">
+               <property name="text">
+                <string>Sleep Mode</string>
+               </property>
+              </widget>
+             </item>
+             <item>
+              <widget class="QCheckBox" name="savingModeCheckBox">
+               <property name="text">
+                <string>Saving Mode</string>
                </property>
               </widget>
              </item>

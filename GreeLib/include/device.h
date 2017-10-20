@@ -47,9 +47,17 @@ public:
     bool isXfanBlowEnabled() const { return m_xfanEnabled; }
     void setXfanBlowEnabled(bool enabled);
 
-    // TODO At the moment I don't have any documentation for "Air" mode
+    // Controls the fresh air valve (if the unit has one)
     bool isAirModeEnabled() const { return m_airModeEnabled; }
     void setAirModeEnabled(bool enabled);
+
+    // Available in Cool, Heat and Dry mode.
+    bool isSleepModeEnabled() const { return m_sleepModeEnabled; }
+    void setSleepModeEnabled(bool enabled);
+
+    // Energy saving function locks fan speed and temperature. Inactive if Sleep Mode is enabled.
+    bool isSavingModeEnabled() const { return m_savingModeEnabled; }
+    void setSavingModeEnabled(bool enabled);
 
     // Auto: 0, Cool: 1, Dry: 2, Fan: 3, Heat: 4
     int mode() const { return m_mode; }
@@ -102,6 +110,8 @@ private:
     bool m_quiet = false;
     bool m_xfanEnabled = false;
     bool m_airModeEnabled = false;
+    bool m_sleepModeEnabled = false;
+    bool m_savingModeEnabled = false;
     int m_mode = 0;
     int m_temperature = 0;
     int m_fanSpeed = 0;
