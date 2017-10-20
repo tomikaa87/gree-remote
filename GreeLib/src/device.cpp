@@ -90,6 +90,18 @@ void Device::processCommandResponse(const QByteArray& response)
     // TODO handle new values in the response
 }
 
+void Device::updateFanParameters()
+{
+    setParameters(ParameterMap{
+        { "WdSpd", m_fanSpeed },
+        { "Quiet", m_quiet ? 1 : 0 },
+        { "Tur", m_turbo ? 1 : 0 },
+
+        // TODO figure out what 'NoiseSet' does
+        { "NoiseSet", 0 },
+    });
+}
+
 void Device::updateStatus()
 {
     if (m_state != State::Idle)
@@ -116,17 +128,21 @@ void Device::setPoweredOn(bool on)
 
 void Device::setHealthEnabled(bool enabled)
 {
-
+    setParameters(ParameterMap{
+        { "Health", enabled ? 1 : 0 }
+    });
 }
 
 void Device::setTurboEnabled(bool enabled)
 {
-
+    m_turbo = enabled;
+    updateFanParameters();
 }
 
 void Device::setQuietModeEnabled(bool enabled)
 {
-
+    m_quiet = enabled;
+    updateFanParameters();
 }
 
 void Device::setLightEnabled(bool enabled)
@@ -138,7 +154,9 @@ void Device::setLightEnabled(bool enabled)
 
 void Device::setMode(int mode)
 {
-
+    setParameters(ParameterMap{
+        { "Mod", mode }
+    });
 }
 
 void Device::setTemperature(int temperature)
@@ -151,12 +169,15 @@ void Device::setTemperature(int temperature)
 
 void Device::setFanSpeed(int speed)
 {
-
+    m_fanSpeed = speed;
+    updateFanParameters();
 }
 
 void Device::setVerticalSwingMode(int mode)
 {
-
+    setParameters(ParameterMap{
+        { "SwUpDn", mode }
+    });
 }
 
 void Device::setParameters(const Device::ParameterMap& parameters)

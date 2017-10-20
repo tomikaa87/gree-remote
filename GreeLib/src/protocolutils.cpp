@@ -62,7 +62,8 @@ QByteArray ProtocolUtils::createDeviceStatusRequestPack(const QString& id)
                 "TemUn",
                 "HeatCoolType",
                 "TemRec",
-                "SvSt"
+                "SvSt",
+                "NoiseSet"
             }
         },
         { "mac", id },
@@ -118,43 +119,43 @@ ProtocolUtils::DeviceParameterMap ProtocolUtils::readStatusMapFromPack(const QJs
         return{};
     }
 
-    auto&& cols = pack["cols"];
-    if (!cols.isArray())
+    auto&& keys = pack["cols"];
+    if (!keys.isArray())
     {
         qCWarning(ProtocolUtilsLog) << "failed to read status map from pack, 'cols' is not an array";
         return{};
     }
 
-    auto&& colsArray = cols.toArray();
-    if (colsArray.isEmpty())
+    auto&& keyArray = keys.toArray();
+    if (keyArray.isEmpty())
     {
         qCWarning(ProtocolUtilsLog) << "failed to read status map from pack, 'cols' is empty";
         return{};
     }
 
-    auto&& dat = pack["dat"];
-    if (!dat.isArray())
+    auto&& values = pack["dat"];
+    if (!values.isArray())
     {
         qCWarning(ProtocolUtilsLog) << "failed to read status map from pack, 'dat' is not an array";
         return{};
     }
 
-    auto&& datArray = dat.toArray();
-    if (datArray.isEmpty())
+    auto&& valueArray = values.toArray();
+    if (valueArray.isEmpty())
     {
         qCWarning(ProtocolUtilsLog) << "failed to read status map from pack, 'dat' is empty";
         return{};
     }
 
-    if (colsArray.size() != datArray.size())
+    if (keyArray.size() != valueArray.size())
     {
         qCWarning(ProtocolUtilsLog) << "failed to read status map from pack, 'dat' size mismatch";
         return{};
     }
 
     DeviceParameterMap map;
-    for (int i = 0; i < colsArray.size(); i++)
-        map[colsArray[i].toString()] = datArray[i].toInt();
+    for (int i = 0; i < keyArray.size(); i++)
+        map[keyArray[i].toString()] = valueArray[i].toInt();
 
     return map;
 }
@@ -164,18 +165,18 @@ QByteArray ProtocolUtils::createDeviceCommandPack(const ProtocolUtils::DevicePar
     if (parameters.isEmpty())
         return{};
 
-    QVariantList values;
-    auto&& pvals = parameters.values();
+    QVariantList variantValues;
+    auto&& intValues = parameters.values();
 
-    std::transform(std::begin(pvals),
-                   std::end(pvals),
-                   std::back_inserter(values),
+    std::transform(std::begin(intValues),
+                   std::end(intValues),
+                   std::back_inserter(variantValues),
                    [](int value) { return QVariant{ value }; });
 
     QJsonObject json
     {
         { "opt", QJsonArray::fromStringList(parameters.keys()) },
-        { "p", QJsonArray::fromVariantList(values) },
+        { "p", QJsonArray::fromVariantList(variantValues) },
         { "t", "cmd" }
     };
 

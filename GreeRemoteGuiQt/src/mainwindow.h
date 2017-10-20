@@ -53,6 +53,10 @@ private:
     void onTurboModeCheckBoxClicked();
     void onQuietModeCheckBoxClicked();
     void onLightCheckBoxClicked();
+    void onModeComboBoxActivated(int index);
+    void onFanSpeedComboBoxActivated(int index);
+    void onVerticalSwingModeComboBoxActivated(int index);
+    void onSetTempButtonClicked();
 };
 
 #endif // MAINWINDOW_H

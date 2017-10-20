@@ -30,6 +30,13 @@ MainWindow::MainWindow(DeviceFinder& deviceFinder, QWidget *parent)
     connect(ui->turboModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onTurboModeCheckBoxClicked);
     connect(ui->quietModeCheckBox, &QCheckBox::clicked, this, &MainWindow::onQuietModeCheckBoxClicked);
     connect(ui->lightCheckBox, &QCheckBox::clicked, this, &MainWindow::onLightCheckBoxClicked);
+    connect(ui->modeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
+            this, &MainWindow::onModeComboBoxActivated);
+    connect(ui->fanSpeedComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
+            this, &MainWindow::onFanSpeedComboBoxActivated);
+    connect(ui->verticalSwingModeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::activated),
+            this, &MainWindow::onVerticalSwingModeComboBoxActivated);
+    connect(ui->setTempButton, &QPushButton::clicked, this, &MainWindow::onSetTempButtonClicked);
 
     connect(ui->flaticonCreditsLabel, &QLabel::linkActivated, this, &MainWindow::onLabelLinkClicked);
 
@@ -216,6 +223,7 @@ void MainWindow::updateTestDeviceStatus()
     ui->quietModeCheckBox->setChecked(m_selectedDevice->isQuietModeEnabled());
     ui->lightCheckBox->setChecked(m_selectedDevice->isLightEnabled());
     ui->powerOnCheckBox->setChecked(m_selectedDevice->isPoweredOn());
+    ui->fanSpeedComboBox->setCurrentIndex(m_selectedDevice->fanSpeed());
 }
 
 void MainWindow::onScanButtonClicked()
@@ -257,4 +265,28 @@ void MainWindow::onLightCheckBoxClicked()
 {
     if (m_selectedDevice)
         m_selectedDevice->setLightEnabled(ui->lightCheckBox->isChecked());
+}
+
+void MainWindow::onModeComboBoxActivated(int index)
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setMode(index);
+}
+
+void MainWindow::onFanSpeedComboBoxActivated(int index)
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setFanSpeed(index);
+}
+
+void MainWindow::onVerticalSwingModeComboBoxActivated(int index)
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setVerticalSwingMode(index);
+}
+
+void MainWindow::onSetTempButtonClicked()
+{
+    if (m_selectedDevice)
+        m_selectedDevice->setTemperature(ui->temperatureSpinBox->value());
 }

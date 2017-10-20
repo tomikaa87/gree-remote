@@ -96,6 +96,8 @@ private:
 
     void processStatusUpdateResponse(const QByteArray& response);
     void processCommandResponse(const QByteArray& response);
+
+    void updateFanParameters();
 };
 
 #endif // DEVICE_H
