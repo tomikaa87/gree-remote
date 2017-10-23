@@ -13,7 +13,7 @@
     <string name="switch_air">Air</string>
     <string name="switch_quiet">Quiet</string>
     <string name="switch_saving">Energy saving</string>
-    <string name="switch_xfan">Dry</string>
+    <string name="switch_xfan">Dry/X-Fan</string>
     <string name="switch_sleep">Sleep</string>
     <string name="device_help_title">Help:</string>
     <string name="device_help_air">Air</string>
@@ -23,7 +23,9 @@
     <string name="device_help_quiet">Quiet</string>
     <string name="device_help_turbo">Turbo</string>
     <string name="device_help_saving">Energy saving</string>
-    <string name="device_temp_unit_celsiue">°C</string>
+    <string name="device_temp_unit_celsius">°C</string>
+    <string name="device_scan_start_notification">Scanning devices on local network...</string>
+    <string name="device_scan_running_notification">Scan is already running. Please wait.</string>
     <string-array name="device_mode_names">
         <item>Automatic</item>
         <item>Cool</item>

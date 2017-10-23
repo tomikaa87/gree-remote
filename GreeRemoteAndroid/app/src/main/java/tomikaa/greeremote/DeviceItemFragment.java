@@ -11,9 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import tomikaa.greeremote.dummy.DummyContent;
-import tomikaa.greeremote.dummy.DummyContent.DummyItem;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,9 +85,9 @@ public class DeviceItemFragment extends Fragment {
             items.get(1).mRoomType = DeviceItem.RoomType.BEDROOM;
             items.get(1).mTemperature = 25;
 
-            items.get(2).mName = "Office";
-            items.get(2).mMode = DeviceItem.Mode.COOL;
-            items.get(2).mRoomType = DeviceItem.RoomType.OFFICE;
+            items.get(2).mName = "Dining room";
+            items.get(2).mMode = DeviceItem.Mode.AUTO;
+            items.get(2).mRoomType = DeviceItem.RoomType.DINING_ROOM;
             items.get(2).mTemperature = 23;
 
             items.get(3).mName = "Kitchen";

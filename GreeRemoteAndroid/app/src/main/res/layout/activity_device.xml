@@ -15,6 +15,7 @@
         android:layout_marginRight="0dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onCoolModeButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintLeft_toRightOf="@+id/autoModeButton"
@@ -28,6 +29,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onAutoModeButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintHorizontal_chainStyle="spread"
@@ -42,6 +44,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
+        android:onClick="onDryModeButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintLeft_toRightOf="@+id/coolModeButton"
@@ -55,6 +58,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onHeatModeButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintLeft_toRightOf="@+id/fanModeButton"
@@ -68,6 +72,7 @@
         android:layout_height="32dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onFanModeButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintLeft_toRightOf="@+id/dryModeButton"
@@ -83,6 +88,7 @@
         android:layout_marginRight="48dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onMinusButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintBottom_toBottomOf="@+id/temperatureTextView"
@@ -99,6 +105,7 @@
         android:layout_marginLeft="48dp"
         android:layout_marginTop="0dp"
         android:background="@android:color/transparent"
+        android:onClick="onPlusButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
         app:layout_constraintBottom_toBottomOf="@+id/temperatureTextView"
@@ -127,7 +134,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
-        android:text="@string/device_temp_unit_celsiue"
+        android:text="@string/device_temp_unit_celsius"
         android:textSize="20sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/temperatureTextView"
         app:layout_constraintLeft_toRightOf="@+id/temperatureTextView" />
@@ -167,30 +174,31 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/imageButton"
+                android:id="@+id/sleepHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:onClick="onDryHelpButtonClicked"
-                app:srcCompat="@mipmap/ic_question"
-                android:layout_marginRight="0dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:layout_marginTop="0dp"
+                android:onClick="onSleepHelpButtonClicked"
+                app:layout_constraintBottom_toBottomOf="@+id/switch7"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch7"
-                android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch7"
-                android:layout_marginBottom="0dp" />
+                app:srcCompat="@mipmap/ic_question" />
 
             <ImageView
                 android:id="@+id/sleepIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch7"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch7"
-                app:srcCompat="@drawable/ic_feature_sleep" />
+                app:srcCompat="@drawable/ic_feature_sleep"
+                app:layout_constraintVertical_bias="0.0" />
 
             <Switch
                 android:id="@+id/switch7"
@@ -213,80 +221,86 @@
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch5"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch5"
-                app:srcCompat="@drawable/ic_mode_dry" />
+                app:srcCompat="@drawable/ic_mode_dry"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/savingIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch6"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch6"
-                app:srcCompat="@drawable/ic_feature_saving" />
+                app:srcCompat="@drawable/ic_feature_saving"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/turboIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch3"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch3"
-                app:srcCompat="@drawable/ic_feature_turbo" />
+                app:srcCompat="@drawable/ic_feature_turbo"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/airIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch1"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch1"
-                app:srcCompat="@drawable/ic_feature_air" />
+                app:srcCompat="@drawable/ic_feature_air"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/quietIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch4"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch4"
-                app:srcCompat="@drawable/ic_feature_quiet" />
+                app:srcCompat="@drawable/ic_feature_quiet"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageView
                 android:id="@+id/healthIcon"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
                 android:layout_marginBottom="0dp"
-                android:layout_marginLeft="16dp"
+                android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/switch2"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/switch2"
-                app:srcCompat="@drawable/ic_feature_health" />
+                app:srcCompat="@drawable/ic_feature_health"
+                app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton
-                android:id="@+id/imageButton8"
+                android:id="@+id/turboHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginBottom="8dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:layout_marginTop="8dp"
                 android:onClick="onTurboHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch3"
@@ -295,11 +309,11 @@
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
-                android:id="@+id/imageButton9"
+                android:id="@+id/savingHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:onClick="onSavingHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch6"
                 app:layout_constraintRight_toRightOf="parent"
@@ -307,11 +321,11 @@
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
-                android:id="@+id/imageButton6"
+                android:id="@+id/quietHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:onClick="onQuietHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch4"
                 app:layout_constraintRight_toRightOf="parent"
@@ -319,11 +333,11 @@
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
-                android:id="@+id/imageButton2"
+                android:id="@+id/airHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:onClick="onAirHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch1"
                 app:layout_constraintRight_toRightOf="parent"
@@ -331,11 +345,11 @@
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
-                android:id="@+id/imageButton3"
+                android:id="@+id/healthHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:onClick="onHealthHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch2"
                 app:layout_constraintRight_toRightOf="parent"
@@ -343,11 +357,11 @@
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
-                android:id="@+id/imageButton4"
+                android:id="@+id/dryHelpButton"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginRight="16dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
                 android:onClick="onDryHelpButtonClicked"
                 app:layout_constraintBottom_toBottomOf="@+id/switch5"
                 app:layout_constraintRight_toRightOf="parent"
