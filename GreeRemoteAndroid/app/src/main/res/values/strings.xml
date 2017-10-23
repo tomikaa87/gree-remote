@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Gree Remote</string>
+    <string name="action_settings">Settings</string>
+    <string name="mode_auto">Automatic</string>
+    <string name="mode_cool">Cool</string>
+    <string name="mode_fan">Fan</string>
+    <string name="mode_dry">Dry</string>
+    <string name="mode_heat">Heat</string>
+    <string name="device_item_mode">Mode:</string>
+    <string name="device_item_temperature">Temperature:</string>
+    <string name="switch_health">Health</string>
+    <string name="switch_turbo">Turbo</string>
+    <string name="switch_air">Air</string>
+    <string name="switch_quiet">Quiet</string>
+    <string name="switch_saving">Energy saving</string>
+    <string name="switch_xfan">Dry</string>
+    <string name="switch_sleep">Sleep</string>
+    <string name="device_help_title">Help:</string>
+    <string name="device_help_air">Air</string>
+    <string name="device_help_health">Health</string>
+    <string name="device_help_dry">Dry</string>
+    <string name="device_help_sleep">Sleep</string>
+    <string name="device_help_quiet">Quiet</string>
+    <string name="device_help_turbo">Turbo</string>
+    <string name="device_help_saving">Energy saving</string>
+    <string name="device_temp_unit_celsiue">°C</string>
+    <string-array name="device_mode_names">
+        <item>Automatic</item>
+        <item>Cool</item>
+        <item>Dry</item>
+        <item>Fan</item>
+        <item>Heat</item>
+    </string-array>
+</resources>
