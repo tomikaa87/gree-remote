@@ -1,4 +1,4 @@
-package tomikaa.greeremote;
+package tomikaa.greeremote.device;
 
 import android.util.Log;
 
@@ -9,14 +9,14 @@ import android.util.Log;
 public class DeviceManager {
     private static DeviceManager sInstance;
 
-    public static int MODE_AUTO = 0;
-    public static int MODE_COOL = 1;
-    public static int MODE_DRY = 2;
-    public static int MODE_FAN = 3;
-    public static int MODE_HEAT = 4;
+    public static final int MODE_AUTO = 0;
+    public static final int MODE_COOL = 1;
+    public static final int MODE_DRY = 2;
+    public static final int MODE_FAN = 3;
+    public static final int MODE_HEAT = 4;
 
-    public static int MIN_TEMP = 16;
-    public static int MAX_TEMP = 30;
+    public static final int MIN_TEMP = 16;
+    public static final int MAX_TEMP = 30;
 
     public static DeviceManager getInstance() {
         if (sInstance == null)

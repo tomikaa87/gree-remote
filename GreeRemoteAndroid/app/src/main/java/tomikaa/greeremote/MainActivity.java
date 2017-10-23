@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import tomikaa.greeremote.device.DeviceManager;
+
 public class MainActivity extends AppCompatActivity
     implements DeviceItemFragment.OnListFragmentInteractionListener {
 
