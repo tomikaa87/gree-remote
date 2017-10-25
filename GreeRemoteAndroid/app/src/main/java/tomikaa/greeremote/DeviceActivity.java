@@ -14,6 +14,7 @@ import tomikaa.greeremote.device.DeviceManager;
 public class DeviceActivity extends AppCompatActivity {
     private DeviceItem mDeviceItem;
     private TextView mTemperatureTextView;
+    private DeviceManager mDeviceManager;
 
     public static String EXTRA_FEATURE_HELP = "tomikaa.greeremote.FEATURE_HELP";
 
@@ -26,6 +27,8 @@ public class DeviceActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mDeviceItem = (DeviceItem) intent.getSerializableExtra(MainActivity.EXTRA_DEVICE_ITEM);
+
+        mDeviceManager = DeviceManager.getInstance();
 
         setTitle(mDeviceItem.mName);
 
@@ -87,38 +90,31 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     public void onAutoModeButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setMode(mDeviceItem.mId, DeviceManager.MODE_AUTO);
+        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_AUTO);
     }
 
     public void onCoolModeButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setMode(mDeviceItem.mId, DeviceManager.MODE_COOL);
+        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_COOL);
     }
 
     public void onDryModeButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setMode(mDeviceItem.mId, DeviceManager.MODE_DRY);
+        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_DRY);
     }
 
     public void onFanModeButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setMode(mDeviceItem.mId, DeviceManager.MODE_FAN);
+        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_FAN);
     }
 
     public void onHeatModeButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setMode(mDeviceItem.mId, DeviceManager.MODE_HEAT);
+        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_HEAT);
     }
 
     public void onPlusButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature + 1);
+        mDeviceManager.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature + 1);
     }
 
     public void onMinusButtonClicked(View view) {
-        DeviceManager dm = DeviceManager.getInstance();
-        dm.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature - 1);
+        mDeviceManager.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature - 1);
     }
 
     private void startHelpActivity(DeviceHelpActivity.Feature feature) {

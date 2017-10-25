@@ -40,7 +40,7 @@ public class ProtocolUtils {
         return "";
     }
 
-    public static String decryptPack(byte[] packEncrypted, String key) {
+    public static String decryptPack(String packEncrypted, String key) {
         try {
             byte[] decoded = Base64.decode(packEncrypted, Base64.DEFAULT);
 
