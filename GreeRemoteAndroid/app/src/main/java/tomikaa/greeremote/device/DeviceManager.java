@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import tomikaa.greeremote.AppConfig;
 import tomikaa.greeremote.device.packets.DeviceDetailsPacket;
 import tomikaa.greeremote.device.packets.DeviceResponsePacket;
 
@@ -79,12 +78,10 @@ public class DeviceManager {
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             int networkType = networkInfo.getType();
 
-            if (!AppConfig.DEBUG) {
-                if (networkType != ConnectivityManager.TYPE_WIFI && networkType != ConnectivityManager.TYPE_ETHERNET) {
-                    Log.w(LOG_TAG, "scanning can only be used on local network");
-                    mState = State.IDLE;
-                    return false;
-                }
+            if (networkType != ConnectivityManager.TYPE_WIFI && networkType != ConnectivityManager.TYPE_ETHERNET) {
+                Log.w(LOG_TAG, "scanning can only be used on local network");
+                mState = State.IDLE;
+                return false;
             }
 
             Log.d(LOG_TAG, String.format("creating DatagramSocket on port %d", DATAGRAM_PORT));
