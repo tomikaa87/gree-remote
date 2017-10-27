@@ -3,32 +3,21 @@ package tomikaa.greeremote.device;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.gson.Gson;
-
-import java.io.IOException;
-import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
-import java.net.SocketTimeoutException;
-import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.concurrent.ExecutionException;
 
+import tomikaa.greeremote.device.packets.BindResponsePacket;
 import tomikaa.greeremote.device.packets.DeviceDetailsPacket;
-import tomikaa.greeremote.device.packets.DeviceResponsePacket;
 
 /**
  * Created by tomikaa on 2017. 10. 23..
  */
 
 public class DeviceManager {
-    private static DeviceManager sInstance;
-
     public static final int MODE_AUTO = 0;
     public static final int MODE_COOL = 1;
     public static final int MODE_DRY = 2;
@@ -37,6 +26,23 @@ public class DeviceManager {
 
     public static final int MIN_TEMP = 16;
     public static final int MAX_TEMP = 30;
+
+    private static DeviceManager sInstance;
+
+    private enum State {
+        IDLE,
+        SCANNING,
+        BINDING,
+        REQUESTING
+    }
+
+    private State mState = State.IDLE;
+    private DatagramSocket mSocket;
+    private static final int DATAGRAM_PORT = 7000;
+    private Context mContext;
+    private static final String LOG_TAG = "DeviceManager";
+    private final DeviceDatabase mDeviceStorage;
+
 
     public static void createInstance(Context context) {
         Log.d(LOG_TAG, "creating instance");
@@ -47,19 +53,6 @@ public class DeviceManager {
         return sInstance;
     }
 
-    private DeviceManager(Context context) {
-        Log.i(LOG_TAG, "created");
-
-        mContext = context;
-        mTimer = new Timer();
-
-        mTimerTask = new TimerTask() {
-            @Override
-            public void run() {
-                onTimerTimeout();
-            }
-        };
-    }
 
     public boolean scanDevicesOnLocalNetwork() {
         if (mState != State.IDLE) {
@@ -67,39 +60,18 @@ public class DeviceManager {
             return false;
         }
 
-        //mState = State.SCANNING;
+        mState = State.SCANNING;
 
         Log.i(LOG_TAG, "starting device scan on local network");
 
         if (mSocket == null) {
-            ConnectivityManager connectivityManager =
-                    (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            int networkType = networkInfo.getType();
-
-            if (networkType != ConnectivityManager.TYPE_WIFI && networkType != ConnectivityManager.TYPE_ETHERNET) {
-                Log.w(LOG_TAG, "scanning can only be used on local network");
-                mState = State.IDLE;
-                return false;
-            }
-
-            Log.d(LOG_TAG, String.format("creating DatagramSocket on port %d", DATAGRAM_PORT));
-
-            try {
-                mSocket = new DatagramSocket(new InetSocketAddress(DATAGRAM_PORT));
-            } catch (SocketException e) {
-                Log.e(LOG_TAG, "failed to create socket. Error: " + e.getMessage());
+            if (!createSocket()) {
                 mState = State.IDLE;
                 return false;
             }
         }
 
-        new AsyncScanner().execute(mSocket);
-
-        //mTimer.schedule(mTimerTask, 500, 500);
-
-        Log.d(LOG_TAG, "local host address: " + mSocket.getLocalSocketAddress().toString());
+        runScan();
 
         return true;
     }
@@ -122,120 +94,103 @@ public class DeviceManager {
         return true;
     }
 
-    private enum State {
-        IDLE,
-        SCANNING,
-        BINDING,
-        REQUESTING
-    }
 
-    private State mState = State.IDLE;
-    private DatagramSocket mSocket;
-    private static final int DATAGRAM_PORT = 7000;
-    private Context mContext;
-    private static final String LOG_TAG = "DeviceManager";
-    private Timer mTimer;
-    private TimerTask mTimerTask;
+    private void runScan() {
+        final AsyncScanner scanner = new AsyncScanner(mSocket);
+        scanner.setFinishedListener(new AsyncOperationFinishedListener() {
+            @Override
+            public void onFinished() {
+                Log.i(LOG_TAG, "scanning finished");
 
-    private void onTimerTimeout() {
-        Log.d(LOG_TAG, "timer tick");
+                DeviceDetailsPacket[] devices = null;
 
-        if (mSocket == null) {
-            Log.w(LOG_TAG, "socket is null, canceling timer task");
-            mTimerTask.cancel();
-            return;
-        }
-
-//        mSocket.receive();
-    }
-
-    private class AsyncScanner extends AsyncTask<DatagramSocket, Void, DeviceDetailsPacket[]> {
-        private static final String LOG_TAG = "AsyncScanner";
-        /**
-         * Override this method to perform a computation on a background thread. The
-         * specified parameters are the parameters passed to {@link #execute}
-         * by the caller of this task.
-         * <p>
-         * This method can call {@link #publishProgress} to publish updates
-         * on the UI thread.
-         *
-         * @param params The parameters of the task.
-         * @return A result, defined by the subclass of this task.
-         * @see #onPreExecute()
-         * @see #onPostExecute
-         * @see #publishProgress
-         */
-        @Override
-        protected DeviceDetailsPacket[] doInBackground(DatagramSocket... params) {
-            DatagramSocket socket = params[0];
-            ArrayList<DeviceResponsePacket> responses = new ArrayList<>();
-
-            try {
-                Log.d(LOG_TAG, "sending scan packet");
-                String scanPacketContent = ProtocolUtils.createScanPacket();
-                DatagramPacket scanPacket = new DatagramPacket(
-                        scanPacketContent.getBytes(),
-                        scanPacketContent.length(),
-                        InetAddress.getByName("192.168.1.255"),
-                        7000);
-                socket.send(scanPacket);
-
-                Log.d(LOG_TAG, "setting receive timeout");
-                socket.setSoTimeout(5000);
-
-                while (true) {
-
-                    Log.d(LOG_TAG, "waiting for response");
-                    byte[] buf = new byte[65536];
-                    DatagramPacket packet = new DatagramPacket(buf, 65536);
-                    socket.receive(packet);
-
-                    Log.d(LOG_TAG, "response received");
-                    InetAddress address = packet.getAddress();
-                    byte[] data = packet.getData();
-                    String json = new String(data, 0, packet.getLength());
-                    Log.d(LOG_TAG, String.format("response from %s: %s", address.getHostAddress(), json));
-
-                    Gson gson = new Gson();
-                    responses.add(gson.fromJson(json, DeviceResponsePacket.class));
+                try {
+                    devices = scanner.get();
+                } catch (InterruptedException e) {
+                    Log.e(LOG_TAG, "failed to get scan result. Error: " + e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(LOG_TAG, "failed to get scan result. Error: " + e.getMessage());
                 }
-            } catch (SocketTimeoutException e) {
-                Log.d(LOG_TAG, "socket timeout");
-            } catch (SocketException e) {
-                Log.w(LOG_TAG, "socket error: " + e.getMessage());
-                return null;
-            } catch (IOException e) {
-                Log.w(LOG_TAG, "io error: " + e.getMessage());
-                return null;
+
+                if (devices != null) {
+                    Log.i(LOG_TAG, String.format("scan got %d device(s)", devices.length));
+                }
+
+                mState = State.IDLE;
+
+                if (devices != null)
+                    runBind(devices);
             }
+        });
+        scanner.execute();
+    }
 
-            Log.d(LOG_TAG, String.format("got %d response(s)", responses.size()));
+    private void runBind(DeviceDetailsPacket[] devices) {
+        mState = State.BINDING;
 
-            ArrayList<DeviceDetailsPacket> deviceDetails = new ArrayList<>();
+        final AsyncBinder binder = new AsyncBinder(mSocket);
+        binder.setFinishedListener(new AsyncOperationFinishedListener() {
+            @Override
+            public void onFinished() {
+                Log.i(LOG_TAG, "binding finished");
 
-            for (DeviceResponsePacket packet: responses) {
-                if (packet.pack == null)
-                    continue;
+                BindResponsePacket[] responses = null;
 
-                String packJson = ProtocolUtils.decryptPack(packet.pack, ProtocolUtils.GENERIC_AES_KEY);
-                Log.d(LOG_TAG, "packJson: " + packJson);
+                try {
+                    responses = binder.get();
+                } catch (InterruptedException e) {
+                    Log.e(LOG_TAG, "failed to get scan result. Error: " + e.getMessage());
+                } catch (ExecutionException e) {
+                    Log.e(LOG_TAG, "failed to get scan result. Error: " + e.getMessage());
+                }
 
-                Gson gson = new Gson();
-                DeviceDetailsPacket details = gson.fromJson(packJson, DeviceDetailsPacket.class);
-                if ("gree".equalsIgnoreCase(details.brand))
-                    deviceDetails.add(details);
+                if (responses != null) {
+                    Log.i(LOG_TAG, String.format("bound %d device(s)", responses.length));
+
+
+                    for (BindResponsePacket packet: responses) {
+                        mDeviceStorage.saveDevice(packet.mac, "device", packet.key);
+                    }
+                }
+
+                mState = State.IDLE;
             }
+        });
+        binder.execute(devices);
+    }
 
-            Log.d(LOG_TAG, String.format("got %d device(s)", deviceDetails.size()));
-            Log.d(LOG_TAG, "finished");
+    private DeviceManager(Context context) {
+        Log.i(LOG_TAG, "created");
 
-            return deviceDetails.toArray(new DeviceDetailsPacket[0]);
+        mContext = context;
+        mDeviceStorage = new DeviceDatabase(mContext);
+
+        mDeviceStorage.loadDevices();
+    }
+
+    private boolean createSocket() {
+        Log.d(LOG_TAG, "creating datagram socket");
+
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        int networkType = networkInfo.getType();
+
+        if (networkType != ConnectivityManager.TYPE_WIFI && networkType != ConnectivityManager.TYPE_ETHERNET) {
+            Log.w(LOG_TAG, "scanning can only be used on local network");
+            return false;
         }
 
-        @Override
-        public void onPostExecute(DeviceDetailsPacket[] result) {
-            super.onPostExecute(result);
-            // TODO start binding
+        Log.d(LOG_TAG, String.format("creating DatagramSocket on port %d", DATAGRAM_PORT));
+
+        try {
+            mSocket = new DatagramSocket(new InetSocketAddress(DATAGRAM_PORT));
+        } catch (SocketException e) {
+            Log.e(LOG_TAG, "failed to create socket. Error: " + e.getMessage());
+            return false;
         }
+
+        return true;
     }
 }
