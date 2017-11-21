@@ -50,6 +50,17 @@ This information is based on the implementation of the official [Gree Smart Andr
 
 The communication protocol uses unicast and broadcast UDP messages sent to port 7000.
 
+### Message encryption and encoding
+
+The protocol uses `pack`-type messages to deliver data from and to the device in a (somewhat) secure way. This message contains a field named `pack`, which encapsulates an another JSON object.
+
+Packs created in the following way:
+* Encrypt the JSON with AES128/ECB with PKCS-7 padding using either the generic or the device-specific AES key
+* Encode the encrypted binary data using Base64
+
+Decoding a pack is the same process, but in reverse order.
+The generic AES key is used for reading scan results and binding devices, the device-specific key is used for direct communication (requesting status, changing parameters etc.).
+
 ### Device discovery (scanning)
 
 In order to find all the devices on the network, a scan packet must be broadcasted. This package is a very simple JSON object:
@@ -405,3 +416,13 @@ There is a way to synchronize the internal clock of the device, but at the momen
 ### Remarks
 
 For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+
+I would like to thank the additional work to:
+* (oroce)[https://github.com/oroce]
+* (jllcunha)[https://github.com/jllcunha]
