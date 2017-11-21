@@ -278,7 +278,26 @@ If the status request succeeds, you should have the following object in the resp
   "t": "dat",
   "mac": "<MAC address>",
   "r": 200,
-  "cols": ["Pow", "Mod", "SetTem", "WdSpd", "Air", "Blo", "Health", "SwhSlp", "Lig", "SwingLfRig", "SwUpDn", "Quiet", "Tur", "StHt", "TemUn", "HeatCoolType", "TemRec", "SvSt"],
+  "cols": [
+    "Pow", 
+    "Mod", 
+    "SetTem", 
+    "WdSpd", 
+    "Air", 
+    "Blo",
+    "Health", 
+    "SwhSlp", 
+    "Lig", 
+    "SwingLfRig", 
+    "SwUpDn", 
+    "Quiet", 
+    "Tur", 
+    "StHt", 
+    "TemUn", 
+    "HeatCoolType", 
+    "TemRec", 
+    "SvSt"
+  ],
   "dat": [1, 1, 25, 1, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0]
 }
 ```
