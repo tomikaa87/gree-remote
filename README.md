@@ -44,6 +44,16 @@ There is so much to do:
 - At a later phase, firmware update capability could be added
 - Command line options could be added to be able to use the app from a terminal
 
+## License
+
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
+
+## Acknowledgments
+
+I would like to thank the additional work to:
+* [oroce](https://github.com/oroce)
+* [jllcunha](https://github.com/jllcunha)
+
 ## Protocol details
 
 This information is based on the implementation of the official [Gree Smart Android App](https://play.google.com/store/apps/details?id=com.gree.smarthome) and the network packets obtained via [Wireshark](https://www.wireshark.org/). The current implementation is incomplete, for example it doesn't have the ability to update the firmware on the AC unit.
@@ -416,13 +426,3 @@ There is a way to synchronize the internal clock of the device, but at the momen
 ### Remarks
 
 For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
-
-## License
-
-This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
-
-## Acknowledgments
-
-I would like to thank the additional work to:
-* [oroce](https://github.com/oroce)
-* [jllcunha](https://github.com/jllcunha)
