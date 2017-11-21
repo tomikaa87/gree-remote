@@ -304,6 +304,8 @@ If the status request succeeds, you should have the following object in the resp
 
 In this object, `cols` defines the parameter names and `dat` defines the values for them.
 
+Since the device won't send you a status update packet when you change a setting using the remote control or the app, you should poll the it periodically.
+
 ### Controlling the device
 
 In order to set a parameter of a device, you must send a command packet to it. It's a simple `pack`-type object with the following JSON encoded into it:
