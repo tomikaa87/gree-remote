@@ -357,7 +357,7 @@ In this object, `r` is the response code (not sure if there are other values tha
 
 ### Scheduling
 
-There is a simple scheduler implementation which can turn on or off your device automatically. New scheduling item can be added via the following packet (thanks to oroce for the details):
+There is a simple scheduler implementation which can turn on or off your device automatically. New scheduling item can be added via the following packet (thanks to [oroce](https://github.com/oroce) for the details):
 
 ```json
 {
