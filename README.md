@@ -250,8 +250,8 @@ In this object you must define which parameters you are interested in. All of th
   * 7: swing in the lowest region (5/5)
   * 8: swing in the middle-low region (4/5)
   * 9: swing in the middle region (3/5)
-  * 10: swing in the middle-up position (2/5)
-  * 11: swing in the upmost position
+  * 10: swing in the middle-up region (2/5)
+  * 11: swing in the upmost region (1/5)
 
 * `Quiet`: controls the Quiet mode which slows down the fan to its most quiet speed. Not available in Dry and Fan mode.
   * 0: off
@@ -270,3 +270,68 @@ In this object you must define which parameters you are interested in. All of th
 * `SvSt`: energy saving mode
   * 0: off
   * 1: on
+
+If the status request succeeds, you should have the following object in the response `pack`:
+
+```json
+{
+  "t": "dat",
+  "mac": "<MAC address>",
+  "r": 200,
+  "cols": ["Pow", "Mod", "SetTem", "WdSpd", "Air", "Blo", "Health", "SwhSlp", "Lig", "SwingLfRig", "SwUpDn", "Quiet", "Tur", "StHt", "TemUn", "HeatCoolType", "TemRec", "SvSt"],
+  "dat": [1, 1, 25, 1, 0, 0, 1, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0]
+}
+```
+
+In this object, `cols` defines the parameter names and `dat` defines the values for them.
+
+### Controlling the device
+
+In order to set a parameter of a device, you must send a command packet to it. It's a simple `pack`-type object with the following JSON encoded into it:
+
+```json
+{
+  "cid": "app",
+  "i": 0,
+  "pack": "<encrypted, encoded pack>",
+  "t": "pack",
+  "tcid": "<MAC address>",
+  "uid": 0
+}
+```
+
+`pack`:
+```json
+{
+  "opt": ["TemUn", "SetTem"],
+  "p": [0, 27],
+  "t": "cmd"
+}
+```
+
+In this object, `opt` contains the names of the parameters you want to set and `p` contains the values for them. The type of the pack is `cmd`. If the request succeeds, you should have the following response pack:
+
+```json
+{
+  "t": "pack",
+  "i": 0,
+  "uid": 0,
+  "cid": "<MAC address>",
+  "tcid": "",
+  "pack": "<encrypted, encoded pack>"
+}
+```
+
+`pack`:
+```json
+{
+  "t": "res",
+  "mac": "<MAC address>",
+  "r": 200,
+  "opt": ["TemUn", "SetTem"],
+  "p": [0, 27],
+  "val": [0, 27]
+}
+```
+
+In this object, `r` is the response code (not sure if there are other values than 200 because the device won't send you anythin if the request fails), `opt` contains the name of the parameters you set, `p` and `val` contains the values for them.
