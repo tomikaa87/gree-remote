@@ -419,7 +419,7 @@ For the sake of simplicity, you can send device control messages to the broadcas
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details
+This project is licensed under the GPL License - see the [LICENSE](LICENSE) file for details
 
 ## Acknowledgments
 
