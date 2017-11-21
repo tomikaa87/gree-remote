@@ -81,7 +81,7 @@ In order to find all the devices on the network, a scan packet must be broadcast
 }
 ```
 
-All connected device will send a response JSON like this one:
+All connected devices will send a response JSON like this one:
 
 ```json
 {
@@ -268,7 +268,7 @@ In this object you must define which parameters you are interested in. All of th
   * 4: fixed in the middle position (3/5)
   * 5: fixed in the middle-low position (4/5)
   * 6: fixed in the lowest position (5/5)
-  * 7: swing in the lowest region (5/5)
+  * 7: swing in the downmost region (5/5)
   * 8: swing in the middle-low region (4/5)
   * 9: swing in the middle region (3/5)
   * 10: swing in the middle-up region (2/5)
