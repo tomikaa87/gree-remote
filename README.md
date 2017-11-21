@@ -355,6 +355,51 @@ In this object, `opt` contains the names of the parameters you want to set and `
 
 In this object, `r` is the response code (not sure if there are other values than 200 because the device won't send you anythin if the request fails), `opt` contains the name of the parameters you set, `p` and `val` contains the values for them.
 
+### Scheduling
+
+There is a simple scheduler implementation which can turn on or off your device automatically. New scheduling item can be added via the following packet (thanks to oroce for the details):
+
+```json
+{
+  "cmd": [
+    {
+      "mac": [
+        "<MAC address>"
+      ],
+      "opt": [
+        "Pow"
+      ],
+      "p": [
+        0
+      ]
+    }
+  ],
+  "enable": 0,
+  "hr": 20,
+  "id": 0,
+  "min": 40,
+  "name": "5363686564756c65",
+  "sec": 0,
+  "t": "setT",
+  "tz": 1,
+  "week": [
+    0,
+    0,
+    1,
+    0,
+    0,
+    1,
+    0
+  ]
+}
+```
+
+In this object, `cmd` defines which device you want to address (`mac`), which parameters you want to set (`opt`) and which are the values for them (`p`). `enable` controls the state of this scheduling item, `hr` and `min` is the time, `name` is the name of the item encoded into ASCII bytes in hexadecimal format, `tz` is the time zone (probably an offset value) and `week` defines on which weekdays the device will execute the command, begining with Sunday.
+
+### Synchronizing the time on the device
+
+There is a way to synchronize the internal clock of the device, but at the moment the command packet for that is unknown.
+
 ### Remarks
 
 For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
