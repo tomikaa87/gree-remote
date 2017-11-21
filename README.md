@@ -424,5 +424,5 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 I would like to thank the additional work to:
-* (oroce)[https://github.com/oroce]
-* (jllcunha)[https://github.com/jllcunha]
+* [oroce](https://github.com/oroce)
+* [jllcunha](https://github.com/jllcunha)
