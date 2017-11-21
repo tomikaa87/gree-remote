@@ -354,3 +354,7 @@ In this object, `opt` contains the names of the parameters you want to set and `
 ```
 
 In this object, `r` is the response code (not sure if there are other values than 200 because the device won't send you anythin if the request fails), `opt` contains the name of the parameters you set, `p` and `val` contains the values for them.
+
+### Remarks
+
+For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
