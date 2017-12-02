@@ -14,6 +14,10 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.List;
 
+import tomikaa.greeremote.Gree.Device.Device;
+import tomikaa.greeremote.Gree.Device.DeviceManager;
+import tomikaa.greeremote.Gree.Device.DeviceManagerEventListener;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -27,6 +31,9 @@ public class DeviceItemFragment extends Fragment {
     // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
+    private DeviceManagerEventListener mDeviceManagerEventListener;
+
+    private View mView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -61,49 +68,39 @@ public class DeviceItemFragment extends Fragment {
 
         // Set the adapter
         if (view instanceof RecyclerView) {
+            mView = view;
+
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
+
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
 
-            final List<DeviceItem> items = new ArrayList<>();
-            items.add(new DeviceItem());
-            items.add(new DeviceItem());
-            items.add(new DeviceItem());
-            items.add(new DeviceItem());
+            DeviceManager dm = DeviceManager.getInstance();
+            dm.unregisterEventListener(mDeviceManagerEventListener);
 
-            items.get(0).mName = "Living room";
-            items.get(0).mMode = DeviceItem.Mode.COOL;
-            items.get(0).mRoomType = DeviceItem.RoomType.LIVING_ROOM;
-            items.get(0).mTemperature = 24;
+            mDeviceManagerEventListener = new DeviceManagerEventListener() {
+                @Override
+                public void onEvent(Event event) {
+                    if (event == Event.DEVICE_LIST_UPDATED)
+                        updateDeviceList();
+                }
+            };
 
-            items.get(1).mName = "Bedroom";
-            items.get(1).mMode = DeviceItem.Mode.FAN;
-            items.get(1).mRoomType = DeviceItem.RoomType.BEDROOM;
-            items.get(1).mTemperature = 25;
+            dm.registerEventListener(mDeviceManagerEventListener);
 
-            items.get(2).mName = "Dining room";
-            items.get(2).mMode = DeviceItem.Mode.AUTO;
-            items.get(2).mRoomType = DeviceItem.RoomType.DINING_ROOM;
-            items.get(2).mTemperature = 23;
-
-            items.get(3).mName = "Kitchen";
-            items.get(3).mMode = DeviceItem.Mode.COOL;
-            items.get(3).mRoomType = DeviceItem.RoomType.KITCHEN;
-            items.get(3).mTemperature = 23;
-
-            recyclerView.setAdapter(new MyDeviceItemRecyclerViewAdapter(items, mListener));
+            updateDeviceList();
 
             DividerItemDecoration dividerDecoration = new DividerItemDecoration(recyclerView.getContext(),
                     LinearLayoutManager.VERTICAL);
             recyclerView.addItemDecoration(dividerDecoration);
         }
+
         return view;
     }
-
 
     @Override
     public void onAttach(Context context) {
@@ -120,6 +117,8 @@ public class DeviceItemFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+        DeviceManager.getInstance().unregisterEventListener(mDeviceManagerEventListener);
     }
 
     /**
@@ -135,5 +134,20 @@ public class DeviceItemFragment extends Fragment {
     public interface OnListFragmentInteractionListener {
         // TODO: Update argument type and name
         void onListFragmentInteraction(DeviceItem item);
+    }
+
+    private void updateDeviceList() {
+        if (mView == null || !(mView instanceof RecyclerView))
+            return;
+
+        final List<DeviceItem> items = new ArrayList<>();
+
+        for (Device d : DeviceManager.getInstance().getDevices()) {
+            items.add(new DeviceItem(d));
+        }
+
+        RecyclerView recyclerView = (RecyclerView) mView;
+
+        recyclerView.setAdapter(new MyDeviceItemRecyclerViewAdapter(items, mListener));
     }
 }

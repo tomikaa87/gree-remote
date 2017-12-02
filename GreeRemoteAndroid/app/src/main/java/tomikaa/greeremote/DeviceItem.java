@@ -2,14 +2,17 @@ package tomikaa.greeremote;
 
 import java.io.Serializable;
 
+import tomikaa.greeremote.Gree.Device.Device;
+
 /**
  * Created by tomikaa on 2017. 10. 22..
  */
 
 public class DeviceItem implements Serializable {
+
     public String mId = "ID";
     public String mName = "Name";
-    public Mode mMode = Mode.AUTO;
+    public Device.Mode mMode = Device.Mode.AUTO;
     public int mTemperature = 16;
     public RoomType mRoomType = RoomType.NONE;
 
@@ -23,11 +26,16 @@ public class DeviceItem implements Serializable {
         OFFICE
     }
 
-    public enum Mode {
-        AUTO,
-        COOL,
-        DRY,
-        FAN,
-        HEAT
+    public DeviceItem() {}
+
+    public DeviceItem(Device device) {
+        updateWithDevice(device);
+    }
+
+    public void updateWithDevice(Device device) {
+        mId = device.getId();
+        mName = device.getName();
+        mMode = device.getMode();
+        mTemperature = device.getTemperature();
     }
 }

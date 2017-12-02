@@ -9,12 +9,15 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import tomikaa.greeremote.device.DeviceManager;
+import tomikaa.greeremote.Gree.Device.Device;
+import tomikaa.greeremote.Gree.Device.DeviceManager;
+import tomikaa.greeremote.Gree.Device.DeviceManagerEventListener;
 
 public class DeviceActivity extends AppCompatActivity {
     private DeviceItem mDeviceItem;
     private TextView mTemperatureTextView;
-    private DeviceManager mDeviceManager;
+    private Device mDevice;
+    private DeviceManagerEventListener mDeviceManagerEventListener;
 
     public static String EXTRA_FEATURE_HELP = "tomikaa.greeremote.FEATURE_HELP";
 
@@ -28,11 +31,27 @@ public class DeviceActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mDeviceItem = (DeviceItem) intent.getSerializableExtra(MainActivity.EXTRA_DEVICE_ITEM);
 
-        mDeviceManager = DeviceManager.getInstance();
-
         setTitle(mDeviceItem.mName);
 
+        mDevice = DeviceManager.getInstance().getDevice(mDeviceItem.mId);
+
+        mDeviceManagerEventListener = new DeviceManagerEventListener() {
+            @Override
+            public void onEvent(Event event) {
+                if (event == Event.DEVICE_STATUS_UPDATED)
+                    update();
+            }
+        };
+
+        DeviceManager.getInstance().registerEventListener(mDeviceManagerEventListener);
+
         update();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        DeviceManager.getInstance().unregisterEventListener(mDeviceManagerEventListener);
     }
 
     @Override
@@ -43,7 +62,7 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     public void update() {
-        mTemperatureTextView.setText(String.format("%d", mDeviceItem.mTemperature));
+        mTemperatureTextView.setText(String.format("%d", mDevice.getTemperature()));
 
         ImageButton autoModeButton = (ImageButton) findViewById(R.id.autoModeButton);
         ImageButton coolModeButton = (ImageButton) findViewById(R.id.coolModeButton);
@@ -54,11 +73,13 @@ public class DeviceActivity extends AppCompatActivity {
         int activeColor = ResourcesCompat.getColor(getResources(), R.color.colorPrimary, null);
         int inactiveColor = ResourcesCompat.getColor(getResources(), R.color.colorSecondaryText, null);
 
-        autoModeButton.setColorFilter(mDeviceItem.mMode == DeviceItem.Mode.AUTO ? activeColor : inactiveColor);
-        coolModeButton.setColorFilter(mDeviceItem.mMode == DeviceItem.Mode.COOL ? activeColor : inactiveColor);
-        dryModeButton.setColorFilter(mDeviceItem.mMode == DeviceItem.Mode.DRY ? activeColor : inactiveColor);
-        fanModeButton.setColorFilter(mDeviceItem.mMode == DeviceItem.Mode.FAN ? activeColor : inactiveColor);
-        heatModeButton.setColorFilter(mDeviceItem.mMode == DeviceItem.Mode.HEAT ? activeColor : inactiveColor);
+        final Device.Mode mode = mDevice.getMode();
+
+        autoModeButton.setColorFilter(mode == Device.Mode.AUTO ? activeColor : inactiveColor);
+        coolModeButton.setColorFilter(mode == Device.Mode.COOL ? activeColor : inactiveColor);
+        dryModeButton.setColorFilter(mode == Device.Mode.DRY ? activeColor : inactiveColor);
+        fanModeButton.setColorFilter(mode == Device.Mode.FAN ? activeColor : inactiveColor);
+        heatModeButton.setColorFilter(mode == Device.Mode.HEAT ? activeColor : inactiveColor);
     }
 
     public void onAirHelpButtonClicked(View view) {
@@ -90,31 +111,31 @@ public class DeviceActivity extends AppCompatActivity {
     }
 
     public void onAutoModeButtonClicked(View view) {
-        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_AUTO);
+        mDevice.setMode(Device.Mode.AUTO);
     }
 
     public void onCoolModeButtonClicked(View view) {
-        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_COOL);
+        mDevice.setMode(Device.Mode.COOL);
     }
 
     public void onDryModeButtonClicked(View view) {
-        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_DRY);
+        mDevice.setMode(Device.Mode.DRY);
     }
 
     public void onFanModeButtonClicked(View view) {
-        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_FAN);
+        mDevice.setMode(Device.Mode.FAN);
     }
 
     public void onHeatModeButtonClicked(View view) {
-        mDeviceManager.setMode(mDeviceItem.mId, DeviceManager.MODE_HEAT);
+        mDevice.setMode(Device.Mode.HEAT);
     }
 
     public void onPlusButtonClicked(View view) {
-        mDeviceManager.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature + 1);
+        mDevice.setTemperature(mDevice.getTemperature() + 1, Device.TemperatureUnit.CELSIUS);
     }
 
     public void onMinusButtonClicked(View view) {
-        mDeviceManager.setTemperature(mDeviceItem.mId, mDeviceItem.mTemperature - 1);
+        mDevice.setTemperature(mDevice.getTemperature() - 1, Device.TemperatureUnit.CELSIUS);
     }
 
     private void startHelpActivity(DeviceHelpActivity.Feature feature) {
