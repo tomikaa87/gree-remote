@@ -85,8 +85,8 @@ public class DeviceItemFragment extends Fragment {
             mDeviceManagerEventListener = new DeviceManagerEventListener() {
                 @Override
                 public void onEvent(Event event) {
-                    if (event == Event.DEVICE_LIST_UPDATED)
-                        updateDeviceList();
+                if (event == Event.DEVICE_LIST_UPDATED || event == Event.DEVICE_STATUS_UPDATED)
+                    updateDeviceList();
                 }
             };
 

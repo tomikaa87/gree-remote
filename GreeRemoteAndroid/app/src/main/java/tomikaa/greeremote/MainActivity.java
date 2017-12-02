@@ -33,15 +33,13 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                DeviceManager.getInstance().discoverDevices();
-                Snackbar.make(view, getString(R.string.device_scan_start_notification), Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-                /*} else {
-                    Snackbar.make(view, getString(R.string.device_scan_running_notification), Snackbar.LENGTH_LONG)
-                            .setAction("Action", null).show();
-                }*/
+            DeviceManager.getInstance().discoverDevices();
+            Snackbar.make(view, getString(R.string.device_scan_start_notification), Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
             }
         });
+
+        DeviceManager.getInstance().discoverDevices();
     }
 
     @Override
