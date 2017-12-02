@@ -13,7 +13,7 @@ public class DeviceItem implements Serializable {
     public String mId = "ID";
     public String mName = "Name";
     public Device.Mode mMode = Device.Mode.AUTO;
-    public int mTemperature = 16;
+    public int mTemperature = 0;
     public RoomType mRoomType = RoomType.NONE;
 
     public enum RoomType {

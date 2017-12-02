@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="tomikaa.greeremote.DeviceActivity"
-    tools:layout_editor_absoluteY="81dp"
-    tools:layout_editor_absoluteX="0dp">
+    tools:layout_editor_absoluteX="0dp"
+    tools:layout_editor_absoluteY="81dp">
 
     <ImageButton
         android:id="@+id/coolModeButton"
@@ -84,35 +84,45 @@
         android:id="@+id/minusButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginRight="48dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginEnd="24dp"
         android:background="@android:color/transparent"
         android:onClick="onMinusButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
-        app:layout_constraintBottom_toBottomOf="@+id/temperatureTextView"
-        app:layout_constraintRight_toLeftOf="@+id/temperatureTextView"
-        app:layout_constraintTop_toTopOf="@+id/temperatureTextView"
-        app:layout_constraintVertical_bias="0.489"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/plusButton"
         app:srcCompat="@drawable/ic_button_minus" />
 
     <ImageButton
         android:id="@+id/plusButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_marginBottom="0dp"
-        android:layout_marginLeft="48dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginEnd="24dp"
         android:background="@android:color/transparent"
         android:onClick="onPlusButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
-        app:layout_constraintBottom_toBottomOf="@+id/temperatureTextView"
-        app:layout_constraintLeft_toRightOf="@+id/temperatureTextView"
-        app:layout_constraintTop_toTopOf="@+id/temperatureTextView"
-        app:layout_constraintVertical_bias="0.489"
+        app:layout_constraintBottom_toTopOf="@+id/minusButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/ic_button_plus" />
+
+    <ImageButton
+        android:id="@+id/powerButton"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:background="@android:color/transparent"
+        android:onClick="onPowerButtonClicked"
+        android:scaleType="fitCenter"
+        android:tint="@color/colorSecondaryText"
+        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_button_power" />
 
     <TextView
         android:id="@+id/temperatureTextView"
@@ -143,7 +153,7 @@
         android:id="@+id/view"
         style="@style/Divider"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/dryModeButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/dryModeButton" />
 
     <View
         android:id="@+id/view2"
@@ -158,15 +168,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="3dp"
+        android:layout_marginTop="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/view"
         tools:layout_constraintBottom_creator="1"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/view">
+        tools:layout_constraintRight_creator="1">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -182,9 +192,9 @@
                 android:layout_marginRight="24dp"
                 android:layout_marginTop="0dp"
                 android:onClick="onSleepHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch7"
+                app:layout_constraintBottom_toBottomOf="@+id/sleepSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch7"
+                app:layout_constraintTop_toTopOf="@+id/sleepSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageView
@@ -194,14 +204,14 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch7"
+                app:layout_constraintBottom_toBottomOf="@+id/sleepSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch7"
-                app:srcCompat="@drawable/ic_feature_sleep"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/sleepSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_sleep" />
 
             <Switch
-                android:id="@+id/switch7"
+                android:id="@+id/sleepSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
@@ -211,10 +221,11 @@
                 android:layout_marginTop="16dp"
                 android:text="@string/switch_sleep"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:onClick="onSleepSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/dryIcon"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch5" />
+                app:layout_constraintTop_toBottomOf="@+id/xfanSwitch" />
 
             <ImageView
                 android:id="@+id/dryIcon"
@@ -223,11 +234,11 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch5"
+                app:layout_constraintBottom_toBottomOf="@+id/xfanSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch5"
-                app:srcCompat="@drawable/ic_mode_dry"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/xfanSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_mode_dry" />
 
             <ImageView
                 android:id="@+id/savingIcon"
@@ -236,11 +247,11 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch6"
+                app:layout_constraintBottom_toBottomOf="@+id/energySavingSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch6"
-                app:srcCompat="@drawable/ic_feature_saving"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/energySavingSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_saving" />
 
             <ImageView
                 android:id="@+id/turboIcon"
@@ -249,11 +260,11 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch3"
+                app:layout_constraintBottom_toBottomOf="@+id/turboSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch3"
-                app:srcCompat="@drawable/ic_feature_turbo"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/turboSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_turbo" />
 
             <ImageView
                 android:id="@+id/airIcon"
@@ -262,11 +273,11 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch1"
+                app:layout_constraintBottom_toBottomOf="@+id/airSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch1"
-                app:srcCompat="@drawable/ic_feature_air"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/airSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_air" />
 
             <ImageView
                 android:id="@+id/quietIcon"
@@ -275,11 +286,11 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch4"
+                app:layout_constraintBottom_toBottomOf="@+id/quietSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch4"
-                app:srcCompat="@drawable/ic_feature_quiet"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/quietSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_quiet" />
 
             <ImageView
                 android:id="@+id/healthIcon"
@@ -288,11 +299,24 @@
                 android:layout_marginBottom="0dp"
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="0dp"
-                app:layout_constraintBottom_toBottomOf="@+id/switch2"
+                app:layout_constraintBottom_toBottomOf="@+id/healthSwitch"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch2"
-                app:srcCompat="@drawable/ic_feature_health"
-                app:layout_constraintVertical_bias="0.0" />
+                app:layout_constraintTop_toTopOf="@+id/healthSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_health" />
+
+            <ImageView
+                android:id="@+id/lightIcon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginBottom="0dp"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="0dp"
+                app:layout_constraintBottom_toBottomOf="@+id/lightSwitch"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lightSwitch"
+                app:layout_constraintVertical_bias="0.0"
+                app:srcCompat="@drawable/ic_feature_light" />
 
             <ImageButton
                 android:id="@+id/turboHelpButton"
@@ -303,9 +327,9 @@
                 android:layout_marginRight="24dp"
                 android:layout_marginTop="8dp"
                 android:onClick="onTurboHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch3"
+                app:layout_constraintBottom_toBottomOf="@+id/turboSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch3"
+                app:layout_constraintTop_toTopOf="@+id/turboSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
@@ -315,9 +339,9 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:onClick="onSavingHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch6"
+                app:layout_constraintBottom_toBottomOf="@+id/energySavingSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch6"
+                app:layout_constraintTop_toTopOf="@+id/energySavingSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
@@ -327,9 +351,9 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:onClick="onQuietHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch4"
+                app:layout_constraintBottom_toBottomOf="@+id/quietSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch4"
+                app:layout_constraintTop_toTopOf="@+id/quietSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
@@ -339,9 +363,9 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:onClick="onAirHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch1"
+                app:layout_constraintBottom_toBottomOf="@+id/airSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch1"
+                app:layout_constraintTop_toTopOf="@+id/airSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
@@ -351,9 +375,9 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:onClick="onHealthHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch2"
+                app:layout_constraintBottom_toBottomOf="@+id/healthSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch2"
+                app:layout_constraintTop_toTopOf="@+id/healthSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <ImageButton
@@ -363,104 +387,138 @@
                 android:layout_marginEnd="24dp"
                 android:layout_marginRight="24dp"
                 android:onClick="onDryHelpButtonClicked"
-                app:layout_constraintBottom_toBottomOf="@+id/switch5"
+                app:layout_constraintBottom_toBottomOf="@+id/xfanSwitch"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/switch5"
+                app:layout_constraintTop_toTopOf="@+id/xfanSwitch"
+                app:srcCompat="@mipmap/ic_question" />
+
+            <ImageButton
+                android:id="@+id/lightHelpButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginEnd="24dp"
+                android:layout_marginRight="24dp"
+                android:onClick="onLightHelpButtonClicked"
+                app:layout_constraintBottom_toBottomOf="@+id/lightSwitch"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/lightSwitch"
                 app:srcCompat="@mipmap/ic_question" />
 
             <Switch
-                android:id="@+id/switch6"
+                android:id="@+id/energySavingSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/switch_saving"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch3"
+                android:onClick="onSavingSwitchClicked"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/savingIcon"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/turboSwitch" />
 
             <Switch
-                android:id="@+id/switch4"
+                android:id="@+id/lightSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
-                android:text="@string/switch_quiet"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/quietIcon"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintHorizontal_bias="0.0"
                 android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/switch7" />
+                android:text="@string/switch_light"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:onClick="onLightSwitchClicked"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/savingIcon"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/energySavingSwitch" />
 
             <Switch
-                android:id="@+id/switch5"
+                android:id="@+id/quietSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="63dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/switch_quiet"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:onClick="onQuietSwitchClicked"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toRightOf="@+id/quietIcon"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/sleepSwitch" />
+
+            <Switch
+                android:id="@+id/xfanSwitch"
+                android:layout_width="0dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="64dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/switch_xfan"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch2"
+                android:onClick="onXfanSwitchClicked"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/dryIcon"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/healthSwitch" />
 
             <Switch
-                android:id="@+id/switch3"
+                android:id="@+id/turboSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/switch_turbo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch4"
+                android:onClick="onTurboSwitchClicked"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/turboIcon"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintHorizontal_bias="0.0" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/quietSwitch" />
 
             <Switch
-                android:id="@+id/switch2"
+                android:id="@+id/healthSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
                 android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="@string/switch_health"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/switch1"
+                android:onClick="onHealthSwitchClicked"
                 app:layout_constraintLeft_toRightOf="@+id/healthIcon"
-                android:layout_marginLeft="16dp" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/airSwitch" />
 
             <Switch
-                android:id="@+id/switch1"
+                android:id="@+id/airSwitch"
                 android:layout_width="0dp"
                 android:layout_height="32dp"
-                android:layout_marginEnd="64dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
-                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/switch_air"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:onClick="onAirSwitchClicked"
+                app:layout_constraintLeft_toRightOf="@+id/airIcon"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintLeft_toRightOf="@+id/airIcon"
-                android:layout_marginLeft="16dp" />
+                tools:checked="false" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 

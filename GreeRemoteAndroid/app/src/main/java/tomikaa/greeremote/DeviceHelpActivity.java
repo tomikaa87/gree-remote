@@ -14,7 +14,8 @@ public class DeviceHelpActivity extends AppCompatActivity {
         SLEEP,
         QUIET,
         TURBO,
-        SAVING
+        SAVING,
+        LIGHT
     }
 
     @Override
@@ -60,6 +61,10 @@ public class DeviceHelpActivity extends AppCompatActivity {
 
             case SAVING:
                 sb.append(getString(R.string.device_help_saving));
+                break;
+
+            case LIGHT:
+                sb.append(getString(R.string.device_help_light));
                 break;
 
             case UNKNOWN:
