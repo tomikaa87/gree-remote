@@ -1,6 +1,7 @@
 package tomikaa.greeremote.Gree.Network;
 
 import android.os.AsyncTask;
+import android.provider.ContactsContract;
 import android.util.Log;
 
 import java.io.IOException;
@@ -11,6 +12,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.ArrayList;
 
+import tomikaa.greeremote.Gree.Packets.AppPacket;
 import tomikaa.greeremote.Gree.Packets.Packet;
 import tomikaa.greeremote.Gree.Utils;
 
@@ -42,25 +44,25 @@ public class AsyncCommunicator extends AsyncTask<Packet[], Void, Packet[]> {
     @Override
     protected Packet[] doInBackground(Packet[]... args) {
         Packet[] requests = args[0];
+        Packet[] responses = new Packet[0];
 
         if (requests == null || requests.length == 0)
-            return new Packet[0];
+            return responses;
 
         if (!createSocket())
-            return new Packet[0];
+            return responses;
 
         try {
             for (Packet request : requests)
                 broadcastPacket(request);
-            Packet[] responses = receivePackets(TIMEOUT_MS);
-            return responses;
+            responses = receivePackets(TIMEOUT_MS);
         } catch (Exception e) {
             Log.e(LOG_TAG, "Error: " + e.getMessage());
         } finally {
             closeSocket();
         }
 
-        return new Packet[0];
+        return responses;
     }
 
     @Override
@@ -78,7 +80,7 @@ public class AsyncCommunicator extends AsyncTask<Packet[], Void, Packet[]> {
 
         DatagramPacket datagramPacket = new DatagramPacket(
                 data.getBytes(), data.length(),
-                InetAddress.getByName("192.168.1.255"), 7000);
+                InetAddress.getByName("255.255.255.255"), DATAGRAM_PORT);
 
         mSocket.send(datagramPacket);
     }
@@ -87,6 +89,7 @@ public class AsyncCommunicator extends AsyncTask<Packet[], Void, Packet[]> {
         mSocket.setSoTimeout(timeout);
 
         ArrayList<Packet> responses = new ArrayList<>();
+        ArrayList<DatagramPacket> datagramPackets = new ArrayList<>();
 
         try {
             while (true) {
@@ -95,19 +98,26 @@ public class AsyncCommunicator extends AsyncTask<Packet[], Void, Packet[]> {
 
                 mSocket.receive(datagramPacket);
 
-                String data = new String(datagramPacket.getData(), 0, datagramPacket.getLength());
-                InetAddress address = datagramPacket.getAddress();
-
-                Log.d(LOG_TAG, String.format("Received response from %s: %s", address.getHostAddress(), data));
-
-                Packet response = Utils.deserializePacket(data, mKeyChain);
-                responses.add(response);
+                datagramPackets.add(datagramPacket);
             }
         } catch (Exception e) {
             Log.w(LOG_TAG, "Exception: " + e.getMessage());
-        } finally {
-            return responses.toArray(new Packet[0]);
         }
+
+        for (DatagramPacket p : datagramPackets) {
+            String data = new String(p.getData(), 0, p.getLength());
+            InetAddress address = p.getAddress();
+
+            Log.d(LOG_TAG, String.format("Received response from %s: %s", address.getHostAddress(), data));
+
+            Packet response = Utils.deserializePacket(data, mKeyChain);
+
+            // Filter out packets sent by us
+            if (response.cid != null && response.cid != AppPacket.CID)
+                responses.add(response);
+        }
+
+        return responses.toArray(new Packet[0]);
     }
 
     private boolean createSocket() {

@@ -84,15 +84,17 @@
         android:id="@+id/minusButton"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="24dp"
         android:background="@android:color/transparent"
         android:onClick="onMinusButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/plusButton"
-        app:srcCompat="@drawable/ic_button_minus" />
+        app:srcCompat="@drawable/ic_button_minus"
+        android:layout_marginRight="24dp" />
 
     <ImageButton
         android:id="@+id/plusButton"
@@ -106,7 +108,8 @@
         app:layout_constraintBottom_toTopOf="@+id/minusButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_button_plus" />
+        app:srcCompat="@drawable/ic_button_plus"
+        android:layout_marginRight="24dp" />
 
     <ImageButton
         android:id="@+id/powerButton"
@@ -119,35 +122,39 @@
         android:onClick="onPowerButtonClicked"
         android:scaleType="fitCenter"
         android:tint="@color/colorSecondaryText"
-        app:layout_constraintBottom_toTopOf="@+id/view2"
+        app:layout_constraintBottom_toTopOf="@+id/view3"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_button_power" />
+        app:srcCompat="@drawable/ic_button_power"
+        android:layout_marginLeft="24dp" />
 
     <TextView
         android:id="@+id/temperatureTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        android:layout_marginStart="8dp"
+        android:fontFamily="@font/thin"
         android:text="00"
         android:textColor="@color/colorPrimaryText"
-        android:textSize="120sp"
-        app:layout_constraintHorizontal_bias="0.502"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="130sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" />
+        tools:layout_constraintRight_creator="1"
+        tools:typeface="normal"
+        android:layout_marginRight="32dp"
+        android:layout_marginLeft="8dp" />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:fontFamily="@font/thin"
         android:text="@string/device_temp_unit_celsius"
-        android:textSize="20sp"
+        android:textSize="36sp"
         app:layout_constraintBaseline_toBaselineOf="@+id/temperatureTextView"
-        app:layout_constraintLeft_toRightOf="@+id/temperatureTextView" />
+        app:layout_constraintStart_toEndOf="@+id/temperatureTextView" />
 
     <View
         android:id="@+id/view"
@@ -160,8 +167,15 @@
         style="@style/Divider"
         android:layout_width="wrap_content"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView"
-        tools:layout_editor_absoluteX="0dp" />
+        app:layout_constraintTop_toBottomOf="@+id/fanSpeedSeekBar"
+        app:layout_editor_absoluteY="300dp" />
+
+    <View
+        android:id="@+id/view3"
+        style="@style/Divider"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/temperatureTextView" />
 
     <ScrollView
         android:id="@+id/featuresScrollView"
@@ -219,9 +233,9 @@
                 android:layout_marginRight="64dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onSleepSwitchClicked"
                 android:text="@string/switch_sleep"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onSleepSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/dryIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -413,9 +427,9 @@
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onSavingSwitchClicked"
                 android:text="@string/switch_saving"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onSavingSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/savingIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -430,9 +444,9 @@
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onLightSwitchClicked"
                 android:text="@string/switch_light"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onLightSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/savingIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -447,9 +461,9 @@
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onQuietSwitchClicked"
                 android:text="@string/switch_quiet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onQuietSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/quietIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -464,9 +478,9 @@
                 android:layout_marginRight="64dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onXfanSwitchClicked"
                 android:text="@string/switch_xfan"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onXfanSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/dryIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -481,9 +495,9 @@
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onTurboSwitchClicked"
                 android:text="@string/switch_turbo"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onTurboSwitchClicked"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toRightOf="@+id/turboIcon"
                 app:layout_constraintRight_toRightOf="parent"
@@ -498,9 +512,9 @@
                 android:layout_marginRight="63dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
+                android:onClick="onHealthSwitchClicked"
                 android:text="@string/switch_health"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onHealthSwitchClicked"
                 app:layout_constraintLeft_toRightOf="@+id/healthIcon"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/airSwitch" />
@@ -512,14 +526,55 @@
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="63dp"
                 android:layout_marginTop="8dp"
+                android:onClick="onAirSwitchClicked"
                 android:text="@string/switch_air"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:onClick="onAirSwitchClicked"
                 app:layout_constraintLeft_toRightOf="@+id/airIcon"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:checked="false" />
+                tools:checked="false"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="63dp" />
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
+
+    <SeekBar
+        android:id="@+id/fanSpeedSeekBar"
+        style="@style/Widget.AppCompat.SeekBar.Discrete"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:max="5"
+        android:progress="3"
+        android:thumb="@drawable/ic_mode_fan"
+        app:layout_constraintEnd_toStartOf="@+id/textView4"
+        app:layout_constraintStart_toEndOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/device_fan_speed_auto"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/fanSpeedSeekBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fanSpeedSeekBar"
+        android:layout_marginLeft="16dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:text="@string/device_fan_speed_max"
+        android:textColor="@color/colorSecondaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/fanSpeedSeekBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/fanSpeedSeekBar"
+        android:layout_marginRight="16dp" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
@@ -47,6 +49,7 @@ public class DeviceActivity extends AppCompatActivity {
         DeviceManager.getInstance().registerEventListener(mDeviceManagerEventListener);
 
         update();
+        setupFanSpeedSeekBarChangeListener();
     }
 
     @Override
@@ -85,6 +88,8 @@ public class DeviceActivity extends AppCompatActivity {
         setSwitchChecked(R.id.turboSwitch, mDevice.isTurboModeEnabled());
         setSwitchChecked(R.id.energySavingSwitch, mDevice.isSavingModeEnabled());
         setSwitchChecked(R.id.lightSwitch, mDevice.isLightEnabled());
+
+        ((SeekBar) findViewById(R.id.fanSpeedSeekBar)).setProgress(mDevice.getFanSpeed().ordinal());
     }
 
     public void onAirHelpButtonClicked(View view) {
@@ -210,5 +215,23 @@ public class DeviceActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    private void setupFanSpeedSeekBarChangeListener() {
+        ((SeekBar) findViewById(R.id.fanSpeedSeekBar)).setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                // FIXME: int might be used for fan speed instead of enum
+                mDevice.setFanSpeed(Device.FanSpeed.values()[seekBar.getProgress()]);
+            }
+        });
     }
 }

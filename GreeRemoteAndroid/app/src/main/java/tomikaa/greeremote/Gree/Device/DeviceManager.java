@@ -187,23 +187,28 @@ public class DeviceManager {
         ArrayList<AppPacket> requests = new ArrayList<>();
 
         for (int i = 0; i < scanResponses.length; i++) {
-            DevicePack devicePack = (DevicePack) scanResponses[i].pack;
+            Packet response = scanResponses[i];
+
+            if (!(response.pack instanceof DevicePack))
+                continue;
+
+            DevicePack devicePack = (DevicePack) response.pack;
 
             DeviceImpl device;
 
-            if (!mDevices.containsKey(scanResponses[i].cid)) {
+            if (!mDevices.containsKey(response.cid)) {
                 device = new DeviceImpl(devicePack.mac, this);
                 mDevices.put(devicePack.mac, device);
             } else {
-                device = mDevices.get(scanResponses[i].cid);
+                device = mDevices.get(response.cid);
             }
             device.updateWithDevicePack(devicePack);
 
-            if (!mKeyChain.containsKey(scanResponses[i].cid)) {
+            if (!mKeyChain.containsKey(response.cid)) {
                 Log.i(LOG_TAG, "Binding device: " + devicePack.name);
 
                 AppPacket request = new AppPacket();
-                request.tcid = scanResponses[i].cid;
+                request.tcid = response.cid;
                 request.pack = new BindPack();
                 request.pack.mac = request.tcid;
                 request.i = 1;
@@ -229,6 +234,9 @@ public class DeviceManager {
 
     private void storeDevices(Packet[] bindResponses) {
         for (Packet response : bindResponses) {
+            if (!(response.pack instanceof BindOkPack))
+                continue;
+
             BindOkPack pack = (BindOkPack) response.pack;
 
             Log.i(LOG_TAG, "Storing key for device: " + pack.mac);
