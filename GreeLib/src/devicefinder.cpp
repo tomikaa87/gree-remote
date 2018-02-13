@@ -195,8 +195,15 @@ void DeviceFinder::bindDevices()
         m_socket->writeDatagram(request, device.address, device.port);
     });
 
-    if (hasPending)
+    if (hasPending){
         m_timer->start();
+    }
+    else{
+        //end bind state - nothing new to bind.
+        qCInfo(DeviceFinderLog) << "binding finished without new devices found";
+
+        m_state = State::Idle;
+    }
 }
 
 void DeviceFinder::processBindResponse(const QByteArray &response)
