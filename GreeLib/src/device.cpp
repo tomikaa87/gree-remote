@@ -71,6 +71,7 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     m_sleepModeEnabled = map["SwhSlp"];
     m_savingModeEnabled = map["SvSt"];
 
+    qCDebug(DeviceLog) << "processing status update done";
     emit statusUpdated();
 }
 
@@ -257,11 +258,13 @@ void Device::onSocketReadyRead()
 
     if (m_state == State::StatusUpdate)
     {
+        qCDebug(DeviceLog) << "Process status update";
         processStatusUpdateResponse(datagram.data());
         m_state = State::Idle;
     }
     else if (m_state == State::Command)
     {
+        qCDebug(DeviceLog) << "Process command";
         processCommandResponse(datagram.data());
         m_state = State::Idle;
     }
