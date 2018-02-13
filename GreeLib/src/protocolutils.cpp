@@ -95,7 +95,7 @@ bool ProtocolUtils::readPackFromResponse(const QByteArray& response,
         qCWarning(ProtocolUtilsLog) << "response doesn't have a 'pack' field which is mandatory";
         return false;
     }
-
+    qCDebug(ProtocolUtilsLog) << "Attempt decrypt with key" << decryptionKey;
     auto&& decryptedPack = Crypto::decryptPack(encryptedPack.toUtf8(), decryptionKey);
     qCDebug(ProtocolUtilsLog) << "decrypted pack:" << decryptedPack;
 
