@@ -5,6 +5,11 @@ This project aims to provide an open-source library for controlling [Gree Smart 
 * ObjectiveC/Cocoa for macOS
 * Java for Android
 
+You can find more implementations for other languages and frameworks:
+* Java: https://github.com/jllcunha/GreeTest
+* OpenHab: https://github.com/jllcunha/openhab-greeair-binding, https://community.openhab.org/t/new-gree-air-conditioner-binding/36429
+* MQTT: https://github.com/arthurkrupa/gree-hvac-mqtt-bridge
+
 ### Getting started
 
 The first step is to clone this repository: `git clone https://github.com/tomikaa87/gree-remote.git`. 
@@ -53,6 +58,7 @@ This project is licensed under the GPL License - see the [LICENSE](LICENSE) file
 I would like to thank the additional work to:
 * [oroce](https://github.com/oroce)
 * [jllcunha](https://github.com/jllcunha)
+* [arthurkrupa](https://github.com/arthurkrupa)
 
 ## Protocol details
 
