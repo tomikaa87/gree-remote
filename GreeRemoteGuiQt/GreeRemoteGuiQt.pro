@@ -56,14 +56,14 @@ CONFIG(debug, debug|release) {
     TARGET = $$join(TARGET,,,d)
 
     LIBS += \
-        -lGreeLibd
+        -lGreeLibd -lcryptopp
 } else {
     message(Release build)
 
     DESTDIR = $$PWD/bin
 
     LIBS += \
-        -lGreeLib
+        -lGreeLib -lcryptopp
 }
 
 macx {

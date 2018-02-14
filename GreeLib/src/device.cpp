@@ -71,6 +71,7 @@ void Device::processStatusUpdateResponse(const QByteArray &response)
     m_sleepModeEnabled = map["SwhSlp"];
     m_savingModeEnabled = map["SvSt"];
 
+    qCDebug(DeviceLog) << "processing status update done";
     emit statusUpdated();
 }
 
@@ -231,21 +232,19 @@ void Device::openSocket()
     qCDebug(DeviceLog) << m_device.id << "opening socket";
     m_socket->open(QIODevice::ReadWrite);
 
-    qCDebug(DeviceLog) << m_device.id << "binding to" << m_device.address << ":" << m_device.port;
-    if (!m_socket->bind(m_device.address, m_device.port, QUdpSocket::ShareAddress))
-    {
-        qCWarning(DeviceLog) << m_device.id << "binding failed. Error:" << m_socket->errorString();
-        return;
-    }
-
     m_state = State::Idle;
 }
 
 void Device::onPollTimerTimeout()
 {
     qCDebug(DeviceLog) << m_device.id << "poll timer timeout";
+    if (m_state == State::StatusUpdate)
+    {
+        qCInfo(DeviceLog) << "Timeout status update";
+        m_state = State::Idle;
+        updateStatus();
+    }
 
-    updateStatus();
 }
 
 void Device::onSocketReadyRead()
@@ -257,11 +256,13 @@ void Device::onSocketReadyRead()
 
     if (m_state == State::StatusUpdate)
     {
+        qCDebug(DeviceLog) << "Process status update";
         processStatusUpdateResponse(datagram.data());
         m_state = State::Idle;
     }
     else if (m_state == State::Command)
     {
+        qCDebug(DeviceLog) << "Process command";
         processCommandResponse(datagram.data());
         m_state = State::Idle;
     }
