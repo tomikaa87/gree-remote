@@ -5,7 +5,7 @@ As its name suggests, Gree Blynk Bridge is a small service written in C# using .
 ## Creating the database
 
 1. Open a terminal
-2. Navigate to the folder where GreeBlynkBridge.csproj can be found
+2. Navigate to the folder where `GreeBlynkBridge.csproj` can be found
 3. Run the following commands:
 
 ```
