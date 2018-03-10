@@ -108,6 +108,8 @@ namespace GreeBlynkBridge.Gree
 
             using (var udp = new UdpClient())
             {
+                udp.EnableBroadcast = true;
+
                 s_log.LogDebug("Sending scan packet");
 
                 var bytes = Encoding.ASCII.GetBytes("{ \"t\": \"scan\" }");
