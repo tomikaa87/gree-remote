@@ -2,4 +2,5 @@
 **/obj
 **/bin
 **/Migrations
+**/.vscode
 GreeBlynkBridge.db
