@@ -3,5 +3,6 @@
 **/bin
 **/Migrations
 **/.vscode
+**/Properties/PublishProfiles
 GreeBlynkBridge.db
 *.csproj.user
