@@ -32,7 +32,14 @@ namespace GreeBlynkBridge
                 return;
             }
 
-            await DiscoverDevices(config);
+            if (config["skip-initial-scan"] != "True")
+                await DiscoverDevices(config);
+            else
+                s_log.LogInformation("Skipping initial scan");
+
+            var controllers = Database.AirConditionerManager.LoadAll().Select((m) => new Gree.Controller(m)).ToList();
+
+            await controllers[0].UpdateDeviceStatus();
         }
 
         static async Task DiscoverDevices(IConfiguration config)

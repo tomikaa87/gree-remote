@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace GreeBlynkBridge.Database
 {
@@ -45,7 +47,6 @@ namespace GreeBlynkBridge.Database
                         }
 
                         await db.AddAsync(model);
-
                     }
                 }
 
@@ -96,6 +97,14 @@ namespace GreeBlynkBridge.Database
             }
 
             return true;
+        }
+
+        public static ICollection<AirConditionerModel> LoadAll()
+        {
+            using (var db = new DatabaseContext())
+            {
+                 return db.AirConditioners.ToList();
+            }
         }
     }
 }
