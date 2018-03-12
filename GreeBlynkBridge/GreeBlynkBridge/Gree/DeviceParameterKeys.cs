@@ -1,5 +1,3 @@
-using System;
-
 namespace GreeBlynkBridge.Gree
 {
     static class DeviceParameterKeys

@@ -51,15 +51,13 @@ namespace GreeBlynkBridge.Blynk
         {
             m_log.LogDebug($"Virtual pin received: {e.Data.Pin}={e.Data.Value[0].ToString()}");
 
-            var pin = e.Data.Pin;
-
             if (!int.TryParse(e.Data.Value[0].ToString(), out int value))
             {
                 m_log.LogWarning("Non-integer value received, ignoring");
                 return;
             }
 
-            int binaryValue = value > 0 ? 1 : 0;
+            var pin = e.Data.Pin;
 
             if (pin == m_pinConfig.deviceSelector)
             {
@@ -69,25 +67,28 @@ namespace GreeBlynkBridge.Blynk
             {
                 foreach (var field in typeof(PinConfiguration).GetFields())
                 {
-                    if (int.TryParse(field.GetValue(m_pinConfig).ToString(), out int result))
-                    {
-                        if (result == pin)
-                        {
-                            var ca = field.GetCustomAttributes(typeof(PinAttribute), false);
-                            if (ca.Count() > 0)
-                            {
-                                var attribute = (ca.First() as PinAttribute);
+                    if (!int.TryParse(field.GetValue(m_pinConfig).ToString(), out int result))
+                        continue;
 
-                                if (attribute.IsReadOnly)
-                                    break;
+                    if (result != pin)
+                        continue;
 
-                                await SetDeviceParameter(attribute.DeviceParamName,
-                                    attribute.IsBinary ? binaryValue : (value + attribute.ValueOffset));
+                    var pinAttributes = field.GetCustomAttributes(typeof(PinAttribute), false);
+                    if (pinAttributes.Count() == 0)
+                        continue;
 
-                                break;
-                            }
-                        }
-                    }
+                    var attribute = (pinAttributes.First() as PinAttribute);
+
+                    // Read-only pin is used for updating gauges and labels
+                    if (attribute.IsReadOnly)
+                        break;
+
+                    int binaryValue = value > 0 ? 1 : 0;
+
+                    await SetDeviceParameter(attribute.DeviceParamName,
+                        attribute.IsBinary ? binaryValue : (value + attribute.ValueOffset));
+
+                    break;
                 }
             }
         }
@@ -143,12 +144,13 @@ namespace GreeBlynkBridge.Blynk
                 setAir = ReadPinMappingValue("set-air", config)
             };
 
-            m_log.LogInformation(m_pinConfig.ToString());
+            m_log.LogDebug(m_pinConfig.ToString());
         }
 
         private int ReadPinMappingValue(string name, IConfiguration config)
         {
             var pin = config[$"blynk:pins:{name}"];
+
             if (pin == null)
                 throw new ArgumentException($"{name} pin is undefined");
 
