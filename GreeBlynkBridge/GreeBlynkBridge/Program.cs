@@ -6,6 +6,8 @@ using System.IO;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Timers;
+using GreeBlynkBridge.Blynk;
 
 namespace GreeBlynkBridge
 {
@@ -37,9 +39,39 @@ namespace GreeBlynkBridge
             else
                 s_log.LogInformation("Skipping initial scan");
 
-            var controllers = Database.AirConditionerManager.LoadAll().Select((m) => new Gree.Controller(m)).ToList();
+            var blynk = new BlynkController(config);
 
-            await controllers[0].UpdateDeviceStatus();
+            var controllers = Database.AirConditionerManager.LoadAll().Select((m) => new Gree.Controller(m)).ToList();
+            blynk.SetDeviceControllers(controllers);
+
+            foreach (var c in controllers)
+            {
+                c.DeviceStatusChanged += DeviceStatusChanged;
+            }
+
+            var deviceUpdateTimer = new Timer(10000)
+            {
+                Enabled = true,
+                AutoReset = true
+            };
+
+            deviceUpdateTimer.Elapsed += async (o, e) =>
+            {
+                s_log.LogDebug("Updating device status");
+
+                foreach (var controller in controllers)
+                    await controller.UpdateDeviceStatus();
+            };
+
+            while (true)
+            {
+                await Task.Delay(100);
+            }
+        }
+
+        private static void DeviceStatusChanged(object sender, Gree.DeviceStatusChangedEventArgs e)
+        {
+            s_log.LogDebug($"Device ({(sender as Gree.Controller).DeviceName}) changed");
         }
 
         static async Task DiscoverDevices(IConfiguration config)

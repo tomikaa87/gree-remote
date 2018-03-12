@@ -21,6 +21,8 @@ namespace GreeBlynkBridge.Gree
         private readonly AirConditionerModel m_model;
         private readonly ILogger m_log;
 
+        public string DeviceName { get => m_model.Name; private set {} }
+        public string DeviceID { get => m_model.ID; private set {} }
         public Dictionary<string, int> Parameters { get; private set; }
 
         public delegate void DeviceStatusChangedEventHandler(object sender, DeviceStatusChangedEventArgs e);
@@ -28,6 +30,8 @@ namespace GreeBlynkBridge.Gree
 
         public Controller(AirConditionerModel model)
         {
+            Parameters = new Dictionary<string, int>();
+
             m_model = model;
             m_log = Logger.CreateLogger($"Controller({model.Name}/{model.ID})");
 
@@ -38,7 +42,7 @@ namespace GreeBlynkBridge.Gree
         {
             m_log.LogDebug("Updating device status");
 
-            var columns = typeof(DeviceStatusKeys).GetFields()
+            var columns = typeof(DeviceParameterKeys).GetFields()
                 .Where((f) => f.FieldType == typeof(string))
                 .Select((f) => f.GetValue(null) as string)
                 .ToList();
@@ -54,7 +58,10 @@ namespace GreeBlynkBridge.Gree
                 .Zip(responsePack.Values, (k, v) => new { k, v })
                 .ToDictionary(x => x.k, x => x.v);
 
-            if (Parameters != updatedParameters)
+            bool parametersChanged = !Parameters.OrderBy(pair => pair.Key)
+                .SequenceEqual(updatedParameters.OrderBy(pair => pair.Key));
+
+            if (parametersChanged)
             {
                 m_log.LogDebug("Device parameters updated");
                 Parameters = updatedParameters;
@@ -64,6 +71,25 @@ namespace GreeBlynkBridge.Gree
                     Parameters = updatedParameters
                 });
             }
+        }
+
+        public async Task SetDeviceParameter(string name, int value)
+        {
+            m_log.LogDebug($"Setting parameter: {name}={value}");
+
+            var pack = CommandRequestPack.Create(
+                DeviceID,
+                new List<string>() { name },
+                new List<int>() { value });
+
+            var json = JsonConvert.SerializeObject(pack);
+            var request = Request.Create(DeviceID, Crypto.EncryptData(json, m_model.PrivateKey));
+            var response = await SendDeviceRequest(request);
+            json = Crypto.DecryptData(response.Pack, m_model.PrivateKey);
+            var responsePack = JsonConvert.DeserializeObject<CommandResponsePack>(json);
+
+            if (!responsePack.Columns.Contains(name))
+                m_log.LogWarning("Parameter cannot be changed.");
         }
 
         private async Task<ResponsePackInfo> SendDeviceRequest(Request request)

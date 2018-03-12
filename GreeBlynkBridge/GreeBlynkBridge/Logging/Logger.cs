@@ -2,7 +2,7 @@
 
 namespace GreeBlynkBridge.Logging
 {
-    static class Logger
+    public static class Logger
     {
         static ILoggerFactory s_loggerFactory = new LoggerFactory();
 

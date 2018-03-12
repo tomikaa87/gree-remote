@@ -26,10 +26,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Blynk\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="GreeBlynkBridge.db">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

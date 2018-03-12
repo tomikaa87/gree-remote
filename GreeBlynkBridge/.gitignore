@@ -4,3 +4,4 @@
 **/Migrations
 **/.vscode
 GreeBlynkBridge.db
+*.csproj.user
