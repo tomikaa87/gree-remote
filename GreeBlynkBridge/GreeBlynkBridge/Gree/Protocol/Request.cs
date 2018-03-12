@@ -1,9 +1,6 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace GreeBlynkBridge.Gree
+namespace GreeBlynkBridge.Gree.Protocol
 {
     class Request : PackInfo
     {

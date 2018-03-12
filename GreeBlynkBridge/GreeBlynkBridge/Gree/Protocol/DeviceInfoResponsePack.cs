@@ -1,29 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace GreeBlynkBridge.Gree
+namespace GreeBlynkBridge.Gree.Protocol
 {
-    /*
-     {
-       "t":"dev",
-       "cid":"f4911e1fb84e",
-       "bc":"gree",
-       "brand":"gree",
-       "catalog":"gree",
-       "mac":"f4911e1fb84e",
-       "mid":"10001",
-       "model":"gree",
-       "name":"Bedroom",
-       "series":"gree",
-       "vender":"1",
-       "ver":"V1.1.13",
-       "lock":0
-    }
-    */
-
-    class DeviceInfo
+    class DeviceInfoResponsePack
     {
         [JsonProperty("bc")]
         public string BrandCode { get; set; }

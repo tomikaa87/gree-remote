@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GreeBlynkBridge.Gree.Protocol;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -36,9 +37,13 @@ namespace GreeBlynkBridge.Gree
                 if (packInfo.Type != "dev")
                     continue;
 
-                var deviceInfo = JsonConvert.DeserializeObject<DeviceInfo>(decryptedPack);
+                var deviceInfo = JsonConvert.DeserializeObject<DeviceInfoResponsePack>(decryptedPack);
 
-                s_log.LogInformation($"Found: ClientId={deviceInfo.ClientId}, FirmwareVersion={deviceInfo.FirmwareVersion}, Name={deviceInfo.FriendlyName}, Address={response.address}");
+                s_log.LogInformation($"Found: " +
+                    $"ClientId={deviceInfo.ClientId}, " +
+                    $"FirmwareVersion={deviceInfo.FirmwareVersion}, " +
+                    $"Name={deviceInfo.FriendlyName}, " +
+                    $"Address={response.address}");
 
                 // TODO check if already bound
 

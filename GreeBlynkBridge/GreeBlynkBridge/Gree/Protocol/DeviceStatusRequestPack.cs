@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 
-namespace GreeBlynkBridge.Gree
+namespace GreeBlynkBridge.Gree.Protocol
 {
     class DeviceStatusRequestPack : RequestPackInfo
     {

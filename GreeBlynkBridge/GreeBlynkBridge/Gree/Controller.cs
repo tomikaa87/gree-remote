@@ -1,7 +1,7 @@
-using System;
 using Microsoft.Extensions.Logging;
 using GreeBlynkBridge.Database;
 using GreeBlynkBridge.Logging;
+using GreeBlynkBridge.Gree.Protocol;
 using System.Threading.Tasks;
 using System.Net.Sockets;
 using Newtonsoft.Json;
@@ -11,13 +11,19 @@ using System.Linq;
 
 namespace GreeBlynkBridge.Gree
 {
+    class DeviceStatusChangedEventArgs
+    {
+        public Dictionary<string, int> Parameters { get; set; }
+    }
+
     class Controller
     {
         private readonly AirConditionerModel m_model;
         private readonly ILogger m_log;
-        private DeviceStatus m_deviceStatus;
 
-        public delegate void DeviceStatusChangedEventHandler(object sender);
+        public Dictionary<string, int> Parameters { get; private set; }
+
+        public delegate void DeviceStatusChangedEventHandler(object sender, DeviceStatusChangedEventArgs e);
         public event DeviceStatusChangedEventHandler DeviceStatusChanged;
 
         public Controller(AirConditionerModel model)
@@ -44,17 +50,19 @@ namespace GreeBlynkBridge.Gree
             json = Crypto.DecryptData(response.Pack, m_model.PrivateKey);
             var responsePack = JsonConvert.DeserializeObject<DeviceStatusResponsePack>(json);
 
-            var deviceStatus = new DeviceStatus()
-            {
-                Parameters = responsePack.Columns
-                    .Zip(responsePack.Values, (k, v) => new { k, v })
-                    .ToDictionary(x => x.k, x => x.v)
-            };
+            var updatedParameters = responsePack.Columns
+                .Zip(responsePack.Values, (k, v) => new { k, v })
+                .ToDictionary(x => x.k, x => x.v);
 
-            if (m_deviceStatus != deviceStatus)
+            if (Parameters != updatedParameters)
             {
-                m_deviceStatus = deviceStatus;
-                DeviceStatusChanged?.Invoke(this);
+                m_log.LogDebug("Device parameters updated");
+                Parameters = updatedParameters;
+
+                DeviceStatusChanged?.Invoke(this, new DeviceStatusChangedEventArgs()
+                {
+                    Parameters = updatedParameters
+                });
             }
         }
 

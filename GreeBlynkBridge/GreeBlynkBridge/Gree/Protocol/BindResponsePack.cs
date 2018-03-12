@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GreeBlynkBridge
+namespace GreeBlynkBridge.Gree.Protocol
 {
     // TODO inherit from response pack info header or something
     class BindResponsePack

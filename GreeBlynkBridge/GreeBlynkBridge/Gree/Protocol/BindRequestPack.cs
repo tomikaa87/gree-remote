@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace GreeBlynkBridge.Gree
+namespace GreeBlynkBridge.Gree.Protocol
 {
     class BindRequestPack
     {
