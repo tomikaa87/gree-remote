@@ -9,6 +9,7 @@ As its name suggests, Gree Blynk Bridge is a small service written in C# using .
 3. Run the following commands:
 
 ```
+dotnet restore
 dotnet add package Microsoft.EntityFrameworkCore.Sqlite
 dotnet add package Microsoft.EntityFrameworkCore.Design
 dotnet ef migrations add InitialCreate
@@ -16,6 +17,26 @@ dotnet ef database update
 ```
 
 At this point you should have a file named `GreeBlynkBridge.db`. This file will be copied automatically to the output folder during the build process.
+
+## Building
+
+1. Be sure you are still in the folder where `GreeBlynkBridge.csproj` resides
+2. Issue the build command:
+
+```
+dotnet build -c Release
+```
+
+## Publishing
+
+1. Be sure you are still in the folder where `GreeBlynkBridge.csproj` resides
+2. Issue the publishing command:
+
+```
+dotnet publish -c Release --output Publish
+```
+
+If everything went fine you should find all the necessary files in the  `Publish` folder.
 
 ## Configuring the service
 
