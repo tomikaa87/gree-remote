@@ -1,5 +1,6 @@
 namespace GreeBlynkBridge.Gree
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Sockets;
@@ -40,8 +41,8 @@ namespace GreeBlynkBridge.Gree
         {
             this.log.LogDebug("Updating device status");
 
-            var columns = typeof(DeviceParameterKeys).GetProperties()
-                .Where((f) => f.PropertyType == typeof(string))
+            var columns = typeof(DeviceParameterKeys).GetFields()
+                .Where((f) => f.FieldType == typeof(string))
                 .Select((f) => f.GetValue(null) as string)
                 .ToList();
 
@@ -57,10 +58,15 @@ namespace GreeBlynkBridge.Gree
 
             var request = Request.Create(this.model.ID, encrypted);
 
-            var response = await this.SendDeviceRequest(request);
-            if (response == null)
+            ResponsePackInfo response;
+
+            try
             {
-                this.log.LogWarning("Failed to send DeviceStatusRequestPack");
+                response = await this.SendDeviceRequest(request);
+            }
+            catch (Exception e)
+            {
+                this.log.LogWarning($"Failed to send DeviceStatusRequestPack. Error: {e.Message}");
                 return;
             }
 
