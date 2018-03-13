@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-
-namespace GreeBlynkBridge.Gree.Protocol
+﻿namespace GreeBlynkBridge.Gree.Protocol
 {
+    using Newtonsoft.Json;
+
     // TODO inherit from response pack info header or something
-    class BindResponsePack
+    internal class BindResponsePack
     {
         [JsonProperty("mac")]
         public string MAC { get; set; }

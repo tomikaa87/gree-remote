@@ -1,6 +1,6 @@
 namespace GreeBlynkBridge.Gree
 {
-    static class DeviceParameterKeys
+    internal struct DeviceParameterKeys
     {
         public const string Power = "Pow";
         public const string Mode = "Mod";

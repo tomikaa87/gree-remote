@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-
-namespace GreeBlynkBridge.Gree.Protocol
+﻿namespace GreeBlynkBridge.Gree.Protocol
 {
-    class DeviceInfoResponsePack
+    using Newtonsoft.Json;
+
+    internal class DeviceInfoResponsePack
     {
         [JsonProperty("bc")]
         public string BrandCode { get; set; }

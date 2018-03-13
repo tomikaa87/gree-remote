@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-
-namespace GreeBlynkBridge.Database
+﻿namespace GreeBlynkBridge.Database
 {
     public class AirConditionerModel
     {
         public string ID { get; set; }
 
         public string Name { get; set; }
+
         public string PrivateKey { get; set; }
+
         public string Address { get; set; }
 
         public override string ToString()
@@ -20,36 +20,22 @@ namespace GreeBlynkBridge.Database
             var o = obj as AirConditionerModel;
 
             if (o == null)
+            {
                 return false;
+            }
 
-            return ID == o.ID &&
-                Name == o.Name &&
-                PrivateKey == o.PrivateKey &&
-                Address == o.Address;
+            return this.ID == o.ID &&
+                this.Name == o.Name &&
+                this.PrivateKey == o.PrivateKey &&
+                this.Address == o.Address;
         }
 
         public override int GetHashCode()
         {
-            return ID.GetHashCode() ^ Name.GetHashCode() ^ PrivateKey.GetHashCode() ^ Address.GetHashCode();
-        }
-    }
-
-    class AirConditionerModelEqualityComparer : IEqualityComparer<AirConditionerModel>
-    {
-        public bool Equals(AirConditionerModel x, AirConditionerModel y)
-        {
-            if (x == null || y == null)
-                return x == y;
-
-            return x.Equals(y);
-        }
-
-        public int GetHashCode(AirConditionerModel obj)
-        {
-            if (obj == null)
-                return 0;
-
-            return obj.GetHashCode();
+            return this.ID.GetHashCode()
+                ^ this.Name.GetHashCode()
+                ^ this.PrivateKey.GetHashCode()
+                ^ this.Address.GetHashCode();
         }
     }
 }

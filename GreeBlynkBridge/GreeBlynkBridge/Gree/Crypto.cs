@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Cryptography;
-using System.Text;
-
-namespace GreeBlynkBridge.Gree
+﻿namespace GreeBlynkBridge.Gree
 {
-    static class Crypto
+    using System;
+    using System.Security.Cryptography;
+    using System.Text;
+
+    internal static class Crypto
     {
         public static readonly string GenericKey = "a3K8Bx%2r8Y7#xDh";
 
-        private static readonly byte[] CbcKey = new byte[] {
+        private static readonly byte[] CbcKey = new byte[]
+        {
                 (byte)17,
                 (byte)/*-101*/0x9b,
                 (byte)/*-16*/0xf0,
@@ -28,9 +28,11 @@ namespace GreeBlynkBridge.Gree
                 (byte)51,
                 (byte)/*-17*/0xef,
                 (byte)16,
-                (byte)69 };
+                (byte)69
+        };
 
-        private static readonly byte[] CbcIv = new byte[] {
+        private static readonly byte[] CbcIv = new byte[] 
+        {
                 (byte)86,
                 (byte)33,
                 (byte)23,
@@ -49,7 +51,8 @@ namespace GreeBlynkBridge.Gree
                 (byte)90,
                 (byte)46,
                 (byte)111,
-                (byte)88 };
+                (byte)88
+        };
 
         public static string EncryptGenericData(string input)
         {
@@ -112,7 +115,7 @@ namespace GreeBlynkBridge.Gree
             }
         }
 
-        static Aes CreateAes(string key)
+        private static Aes CreateAes(string key)
         {
             var aes = Aes.Create();
 
@@ -125,7 +128,7 @@ namespace GreeBlynkBridge.Gree
             return aes;
         }
 
-        static Aes CreateAesCbc()
+        private static Aes CreateAesCbc()
         {
             var aes = Aes.Create();
 

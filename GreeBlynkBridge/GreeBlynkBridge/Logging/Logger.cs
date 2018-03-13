@@ -1,29 +1,29 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace GreeBlynkBridge.Logging
+﻿namespace GreeBlynkBridge.Logging
 {
-    public static class Logger
+    using Microsoft.Extensions.Logging;
+
+    internal static class Logger
     {
-        static ILoggerFactory s_loggerFactory = new LoggerFactory();
+        private static ILoggerFactory loggerFactory = new LoggerFactory();
 
         static Logger()
         {
-            s_loggerFactory.AddProvider(new ConsoleLoggerProvider());
+            loggerFactory.AddProvider(new ConsoleLoggerProvider());
         }
 
         public static ILogger CreateDefaultLogger()
         {
-            return s_loggerFactory.CreateLogger("GreeBlynkBridge");
+            return loggerFactory.CreateLogger("GreeBlynkBridge");
         }
 
         public static ILogger CreateLogger(string category)
         {
-            return s_loggerFactory.CreateLogger(category);
+            return loggerFactory.CreateLogger(category);
         }
 
         public static ILogger<T> CreateLogger<T>()
         {
-            return s_loggerFactory.CreateLogger<T>();
+            return loggerFactory.CreateLogger<T>();
         }
     }
 }

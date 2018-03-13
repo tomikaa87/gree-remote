@@ -1,8 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace GreeBlynkBridge.Database
+﻿namespace GreeBlynkBridge.Database
 {
-    class DatabaseContext : DbContext
+    using Microsoft.EntityFrameworkCore;
+
+    internal class DatabaseContext : DbContext
     {
         public DbSet<AirConditionerModel> AirConditioners { get; set; }
 

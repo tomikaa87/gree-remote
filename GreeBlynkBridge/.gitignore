@@ -6,3 +6,4 @@
 **/Properties/PublishProfiles
 GreeBlynkBridge.db
 *.csproj.user
+StyleCop.Cache

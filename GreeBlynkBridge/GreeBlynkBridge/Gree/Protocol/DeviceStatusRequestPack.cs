@@ -1,9 +1,9 @@
-using System.Collections.Generic;
-using Newtonsoft.Json;
-
 namespace GreeBlynkBridge.Gree.Protocol
 {
-    class DeviceStatusRequestPack : RequestPackInfo
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    internal class DeviceStatusRequestPack : RequestPackInfo
     {
         [JsonProperty("cols")]
         public List<string> Columns { get; set; }

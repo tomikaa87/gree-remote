@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-
-namespace GreeBlynkBridge.Gree.Protocol
+﻿namespace GreeBlynkBridge.Gree.Protocol
 {
-    class ResponsePackInfo : PackInfo
+    using Newtonsoft.Json;
+
+    internal class ResponsePackInfo : PackInfo
     {
-        [JsonProperty("uid", NullValueHandling=NullValueHandling.Ignore)]
+        [JsonProperty("uid", NullValueHandling = NullValueHandling.Ignore)]
         public int? UID { get; set; }
 
         [JsonProperty("tcid")]

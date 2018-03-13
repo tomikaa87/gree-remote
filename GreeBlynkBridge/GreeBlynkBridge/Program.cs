@@ -1,21 +1,21 @@
-﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using System.IO;
-using System;
-using System.Linq;
-using System.Collections.Generic;
-using System.Timers;
-using GreeBlynkBridge.Blynk;
-
-namespace GreeBlynkBridge
+﻿namespace GreeBlynkBridge
 {
-    class Program
-    {
-        static ILogger s_log = Logging.Logger.CreateDefaultLogger();
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Threading.Tasks;
+    using System.Timers;
+    using GreeBlynkBridge.Blynk;
+    using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Logging;
 
-        static async Task Main(string[] args)
+    internal class Program
+    {
+        private static ILogger log = Logging.Logger.CreateDefaultLogger();
+
+        private static async Task Main(string[] args)
         {
             var basePath = Directory.GetParent(new Uri(Assembly.GetExecutingAssembly().CodeBase).AbsolutePath).FullName;
 
@@ -28,16 +28,21 @@ namespace GreeBlynkBridge
             try
             {
                 config = configBuilder.Build();
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
-                s_log.LogCritical($"Failed to load configuration: {e.Message}");
+                log.LogCritical($"Failed to load configuration: {e.Message}");
                 return;
             }
 
             if (config["skip-initial-scan"] != "True")
+            {
                 await DiscoverDevices(config);
+            }
             else
-                s_log.LogInformation("Skipping initial scan");
+            {
+                log.LogInformation("Skipping initial scan");
+            }
 
             var blynk = new BlynkController(config);
 
@@ -57,10 +62,12 @@ namespace GreeBlynkBridge
 
             deviceUpdateTimer.Elapsed += async (o, e) =>
             {
-                s_log.LogDebug("Updating device status");
+                log.LogDebug("Updating device status");
 
                 foreach (var controller in controllers)
+                {
                     await controller.UpdateDeviceStatus();
+                }
             };
 
             while (true)
@@ -71,17 +78,17 @@ namespace GreeBlynkBridge
 
         private static void DeviceStatusChanged(object sender, Gree.DeviceStatusChangedEventArgs e)
         {
-            s_log.LogDebug($"Device ({(sender as Gree.Controller).DeviceName}) changed");
+            log.LogDebug($"Device ({(sender as Gree.Controller).DeviceName}) changed");
         }
 
-        static async Task DiscoverDevices(IConfiguration config)
+        private static async Task DiscoverDevices(IConfiguration config)
         {
             var configEnum = config.AsEnumerable();
 
             var broadcastAddresses = configEnum.Where((e) => e.Key.StartsWith("network:broadcast:"));
             if (broadcastAddresses.Count() == 0)
             {
-                s_log.LogCritical("No network broadcast addresses configured");
+                log.LogCritical("No network broadcast addresses configured");
                 return;
             }
 
@@ -89,12 +96,12 @@ namespace GreeBlynkBridge
 
             foreach (var entry in broadcastAddresses)
             {
-                s_log.LogInformation($"Scanning local devices using address {entry.Value}");
+                log.LogInformation($"Scanning local devices using address {entry.Value}");
 
                 foundUnits.AddRange(await Gree.Scanner.Scan(entry.Value));
             }
 
-            s_log.LogInformation("Updating the database");
+            log.LogInformation("Updating the database");
 
             foreach (var unit in foundUnits.Distinct(new Database.AirConditionerModelEqualityComparer()))
             {

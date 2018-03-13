@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-
-namespace GreeBlynkBridge.Logging
+﻿namespace GreeBlynkBridge.Logging
 {
-    class ConsoleLoggerProvider : ILoggerProvider
+    using Microsoft.Extensions.Logging;
+
+    internal class ConsoleLoggerProvider : ILoggerProvider
     {
         public ILogger CreateLogger(string categoryName)
         {

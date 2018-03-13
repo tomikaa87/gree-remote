@@ -1,15 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-
-namespace GreeBlynkBridge.Logging
+﻿namespace GreeBlynkBridge.Logging
 {
-    class ConsoleLogger : ILogger
+    using System;
+    using Microsoft.Extensions.Logging;
+
+    internal class ConsoleLogger : ILogger
     {
-        readonly string m_categoryName;
+        private readonly string categoryName;
 
         public ConsoleLogger(string categoryName)
         {
-            m_categoryName = categoryName;
+            this.categoryName = categoryName;
         }
 
         public IDisposable BeginScope<TState>(TState state)
@@ -25,7 +25,9 @@ namespace GreeBlynkBridge.Logging
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             if (exception != null)
+            {
                 throw new NotImplementedException("Exception logging is not implemented");
+            }
 
             var originalForegroundColor = Console.ForegroundColor;
 
@@ -60,7 +62,7 @@ namespace GreeBlynkBridge.Logging
             Console.ForegroundColor = originalForegroundColor;
             Console.Write("]");
 
-            Console.WriteLine($"[{m_categoryName}]: {state.ToString()}");
+            Console.WriteLine($"[{this.categoryName}]: {state.ToString()}");
         }
     }
 }

@@ -1,21 +1,23 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
-
-namespace GreeBlynkBridge.Database
+﻿namespace GreeBlynkBridge.Database
 {
-    static class AirConditionerManager
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using Microsoft.Extensions.Logging;
+
+    internal static class AirConditionerManager
     {
-        static ILogger s_log = Logging.Logger.CreateLogger("AirConditionerManager");
+        private static ILogger log = Logging.Logger.CreateLogger("AirConditionerManager");
 
         public static async Task UpdateAsync(AirConditionerModel model)
         {
             if (model == null)
+            {
                 throw new ArgumentException("Model parameter must not be null");
+            }
 
-            s_log.LogDebug($"Update: {model}");
+            log.LogDebug($"Update: {model}");
 
             using (var db = new DatabaseContext())
             {
@@ -23,26 +25,26 @@ namespace GreeBlynkBridge.Database
 
                 if (found == null)
                 {
-                    s_log.LogDebug("  model not found in the database, inserting");
+                    log.LogDebug("  model not found in the database, inserting");
 
                     await db.AddAsync(model);
                 }
                 else
                 {
-                    s_log.LogDebug("  model found in the database, checking if update needed");
+                    log.LogDebug("  model found in the database, checking if update needed");
 
                     if (found.Equals(model))
                     {
-                        s_log.LogDebug("  model is up to date");
+                        log.LogDebug("  model is up to date");
                     }
                     else
                     {
-                        s_log.LogDebug("  model needs to be updated");
+                        log.LogDebug("  model needs to be updated");
 
                         db.Remove(found);
                         if (await db.SaveChangesAsync() == 0)
                         {
-                            s_log.LogError("  outdated model cannot be removed from the database");
+                            log.LogError("  outdated model cannot be removed from the database");
                             return;
                         }
 
@@ -51,19 +53,19 @@ namespace GreeBlynkBridge.Database
                 }
 
                 var savedRecords = await db.SaveChangesAsync();
-                s_log.LogDebug($"  saved record(s): {savedRecords}");
+                log.LogDebug($"  saved record(s): {savedRecords}");
             }
         }
 
         public static async Task<AirConditionerModel> GetByIDAsync(string id)
         {
-            s_log.LogDebug($"GetByIDAsync: {id}");
+            log.LogDebug($"GetByIDAsync: {id}");
 
             using (var db = new DatabaseContext())
             {
                 var found = await db.FindAsync<AirConditionerModel>(id);
 
-                s_log.LogDebug($"  found: {found?.ToString()}");
+                log.LogDebug($"  found: {found?.ToString()}");
 
                 return found;
             }
@@ -71,7 +73,7 @@ namespace GreeBlynkBridge.Database
 
         public static async Task<bool> RemoveByIDAsync(string id)
         {
-            s_log.LogDebug($"RemoveByIDAsync: {id}");
+            log.LogDebug($"RemoveByIDAsync: {id}");
 
             using (var db = new DatabaseContext())
             {
@@ -79,7 +81,7 @@ namespace GreeBlynkBridge.Database
 
                 if (found == null)
                 {
-                    s_log.LogWarning($"  cannot remove {id}, it's not found in the database");
+                    log.LogWarning($"  cannot remove {id}, it's not found in the database");
                     return false;
                 }
 
@@ -87,12 +89,12 @@ namespace GreeBlynkBridge.Database
 
                 if (await db.SaveChangesAsync() == 0)
                 {
-                    s_log.LogError("  cannot save changes");
+                    log.LogError("  cannot save changes");
                     return false;
                 }
                 else
                 {
-                    s_log.LogDebug("  removed from the database");
+                    log.LogDebug("  removed from the database");
                 }
             }
 

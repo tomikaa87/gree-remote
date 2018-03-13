@@ -1,8 +1,8 @@
-﻿using Newtonsoft.Json;
-
-namespace GreeBlynkBridge.Gree.Protocol
+﻿namespace GreeBlynkBridge.Gree.Protocol
 {
-    class PackInfo
+    using Newtonsoft.Json;
+
+    internal class PackInfo
     {
         [JsonProperty("t")]
         public string Type { get; set; }

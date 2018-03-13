@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System.Collections.Generic;
-
-namespace GreeBlynkBridge.Gree.Protocol
+﻿namespace GreeBlynkBridge.Gree.Protocol
 {
-    class CommandResponsePack
+    using System.Collections.Generic;
+    using Newtonsoft.Json;
+
+    internal class CommandResponsePack
     {
         [JsonProperty("opt")]
         public List<string> Columns { get; set; }

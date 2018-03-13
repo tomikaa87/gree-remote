@@ -1,22 +1,16 @@
-﻿using GreeBlynkBridge.Gree.Protocol;
-using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System.Collections.Generic;
-using System.Net.Sockets;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GreeBlynkBridge.Gree
+﻿namespace GreeBlynkBridge.Gree
 {
-    static class Scanner
-    {
-        static ILogger s_log = Logging.Logger.CreateLogger("Scanner");
+    using System.Collections.Generic;
+    using System.Net.Sockets;
+    using System.Text;
+    using System.Threading.Tasks;
+    using GreeBlynkBridge.Gree.Protocol;
+    using Microsoft.Extensions.Logging;
+    using Newtonsoft.Json;
 
-        class DeviceDiscoveryResponse
-        {
-            public string json;
-            public string address;
-        }
+    internal static class Scanner
+    {
+        private static ILogger log = Logging.Logger.CreateLogger("Scanner");
 
         public static async Task<List<Database.AirConditionerModel>> Scan(string broadcastAddresses)
         {
@@ -26,27 +20,31 @@ namespace GreeBlynkBridge.Gree
 
             foreach (var response in responses)
             {
-                var responsePackInfo = JsonConvert.DeserializeObject<ResponsePackInfo>(response.json);
+                var responsePackInfo = JsonConvert.DeserializeObject<ResponsePackInfo>(response.Json);
                 if (responsePackInfo.Type != "pack")
+                {
                     continue;
+                }
 
                 var decryptedPack = Crypto.DecryptGenericData(responsePackInfo.Pack);
 
                 var packInfo = JsonConvert.DeserializeObject<PackInfo>(decryptedPack);
                 if (packInfo.Type != "dev")
+                {
                     continue;
+                }
 
                 var deviceInfo = JsonConvert.DeserializeObject<DeviceInfoResponsePack>(decryptedPack);
 
-                s_log.LogInformation($"Found: " +
+                log.LogInformation($"Found: " +
                     $"ClientId={deviceInfo.ClientId}, " +
                     $"FirmwareVersion={deviceInfo.FirmwareVersion}, " +
                     $"Name={deviceInfo.FriendlyName}, " +
-                    $"Address={response.address}");
+                    $"Address={response.Address}");
 
-                // TODO check if already bound
+                //// TODO check if already bound
 
-                s_log.LogDebug("  Binding");
+                log.LogDebug("  Binding");
 
                 var bindRequestPack = new BindRequestPack() { MAC = deviceInfo.ClientId };
                 var request = Request.Create(deviceInfo.ClientId, Crypto.EncryptGenericData(JsonConvert.SerializeObject(bindRequestPack)), 1);
@@ -56,11 +54,11 @@ namespace GreeBlynkBridge.Gree
 
                 using (var udp = new UdpClient())
                 {
-                    var sent = await udp.SendAsync(datagram, datagram.Length, response.address, 7000);
+                    var sent = await udp.SendAsync(datagram, datagram.Length, response.Address, 7000);
 
                     if (sent != datagram.Length)
                     {
-                        s_log.LogWarning("  Binding request cannot be sent");
+                        log.LogWarning("  Binding request cannot be sent");
                         continue;
                     }
 
@@ -69,9 +67,9 @@ namespace GreeBlynkBridge.Gree
                         if (udp.Available > 0)
                         {
                             var result = await udp.ReceiveAsync();
-                            if (result.RemoteEndPoint.Address.ToString() != response.address)
+                            if (result.RemoteEndPoint.Address.ToString() != response.Address)
                             {
-                                s_log.LogWarning($"  Got binding response from the wrong device: {result.RemoteEndPoint.Address.ToString()}");
+                                log.LogWarning($"  Got binding response from the wrong device: {result.RemoteEndPoint.Address.ToString()}");
                                 continue;
                             }
 
@@ -79,11 +77,13 @@ namespace GreeBlynkBridge.Gree
 
                             responsePackInfo = JsonConvert.DeserializeObject<ResponsePackInfo>(responseJson);
                             if (responsePackInfo.Type != "pack")
+                            {
                                 continue;
+                            }
 
                             var bindResponse = JsonConvert.DeserializeObject<BindResponsePack>(Crypto.DecryptGenericData(responsePackInfo.Pack));
 
-                            s_log.LogDebug($"  Success. Key: {bindResponse.Key}");
+                            log.LogDebug($"  Success. Key: {bindResponse.Key}");
 
                             foundUnits.Add(new Database.AirConditionerModel()
                             {
@@ -101,7 +101,7 @@ namespace GreeBlynkBridge.Gree
                 }
             }
 
-            s_log.LogInformation("Scan finished");
+            log.LogInformation("Scan finished");
 
             return foundUnits;
         }
@@ -114,13 +114,13 @@ namespace GreeBlynkBridge.Gree
             {
                 udp.EnableBroadcast = true;
 
-                s_log.LogDebug("Sending scan packet");
+                log.LogDebug("Sending scan packet");
 
                 var bytes = Encoding.ASCII.GetBytes("{ \"t\": \"scan\" }");
 
                 var sent = await udp.SendAsync(bytes, bytes.Length, broadcastAddress, 7000);
 
-                s_log.LogDebug($"Sent bytes: {sent}");
+                log.LogDebug($"Sent bytes: {sent}");
 
                 for (int i = 0; i < 20; ++i)
                 {
@@ -130,11 +130,11 @@ namespace GreeBlynkBridge.Gree
 
                         responses.Add(new DeviceDiscoveryResponse()
                         {
-                            json = Encoding.ASCII.GetString(result.Buffer),
-                            address = result.RemoteEndPoint.Address.ToString()
+                            Json = Encoding.ASCII.GetString(result.Buffer),
+                            Address = result.RemoteEndPoint.Address.ToString()
                         });
 
-                        s_log.LogDebug($"Got response from {result.RemoteEndPoint.Address.ToString()}");
+                        log.LogDebug($"Got response from {result.RemoteEndPoint.Address.ToString()}");
                     }
 
                     await Task.Delay(100);
