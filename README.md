@@ -4,11 +4,13 @@ This project aims to provide an open-source library for controlling [Gree Smart 
 * Qt/C++ for Windows/macOS
 * ObjectiveC/Cocoa for macOS
 * Java for Android
+* C# for DotNet Core
 
 You can find more implementations for other languages and frameworks:
 * Java: https://github.com/jllcunha/GreeTest
 * OpenHab: https://github.com/jllcunha/openhab-greeair-binding, https://community.openhab.org/t/new-gree-air-conditioner-binding/36429
 * MQTT: https://github.com/arthurkrupa/gree-hvac-mqtt-bridge
+* C#: https://github.com/tomikaa87/gree-remote/tree/master/GreeBlynkBridge
 
 ### Getting started
 
