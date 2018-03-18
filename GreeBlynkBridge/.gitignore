@@ -1,0 +1,9 @@
+.vs
+**/obj
+**/bin
+**/Migrations
+**/.vscode
+**/Properties/PublishProfiles
+GreeBlynkBridge.db
+*.csproj.user
+StyleCop.Cache

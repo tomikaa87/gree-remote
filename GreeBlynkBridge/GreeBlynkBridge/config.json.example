@@ -1,0 +1,34 @@
+{
+	"network": {
+		"broadcast" : [ "192.168.3.255" ]
+	},
+	
+	"blynk": {
+		"token": "*** your Blynk token ***",
+		
+		"devices": [
+			"*** device id 1 ***,
+			"*** device id 2 ***"
+		],
+		
+		"pins": {
+			"device-selector": 100,
+			"set-mode": 99,
+			"get-temperature": 98,
+			"set-temperature": 97,
+			"set-fan-speed": 96,
+			"set-vertical-swing": 95,
+			"set-power": 94,
+			"set-turbo": 93,
+			"set-quiet": 92,
+			"set-sleep": 91,
+			"set-xfan": 90,
+			"set-health": 89,
+			"set-energy-saving": 88,
+			"set-light": 87,
+			"set-air": 86
+		}
+	},
+	
+	"skip-initial-scan": false
+}
