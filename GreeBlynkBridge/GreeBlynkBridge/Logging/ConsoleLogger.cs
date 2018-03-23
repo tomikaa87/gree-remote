@@ -7,7 +7,7 @@
     {
         private readonly string categoryName;
 
-        private readonly object consoleLockObject = new object();
+        private static object consoleLockObject = new object();
 
         public ConsoleLogger(string categoryName)
         {
@@ -26,7 +26,7 @@
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            lock (this.consoleLockObject)
+            lock (consoleLockObject)
             {
                 if (exception != null)
                 {
