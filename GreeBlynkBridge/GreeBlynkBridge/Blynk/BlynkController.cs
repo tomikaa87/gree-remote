@@ -96,7 +96,7 @@
 
                     await this.SetDeviceParameter(
                         attribute.DeviceParamName,
-                        attribute.IsBinary ? binaryValue : (value + attribute.ValueOffset));
+                        attribute.IsBinary ? binaryValue : (value - attribute.ValueOffset));
 
                     break;
                 }
