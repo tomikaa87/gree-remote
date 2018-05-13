@@ -429,7 +429,55 @@ In this object, `cmd` defines which device you want to address (`mac`), which pa
 
 ### Synchronizing the time on the device
 
-There is a way to synchronize the internal clock of the device, but at the moment the command packet for that is unknown.
+In order to get the current time of the device's clock, you must send the following encrypted pack to it:
+
+`pack`:
+```json
+{
+  "cols": ["time"],
+  "mac": "<MAC address>",
+  "t": "status"
+}
+```
+
+And the device will send a response like that:
+
+`pack`:
+```json
+{
+  "t": "dat",
+  "mac": "<MAC address>",
+  "r": 200,
+  "cols": ["time"],
+  "dat": ["2018-05-11 19:42:01"]
+}
+```
+
+To set the time on the device, send the following pack:
+
+`pack`:
+```json
+{
+  "opt": ["time"],
+  "p": ["2018-05-11 19:29:38"],
+  "sub": "<MAC address>",
+  "t": "cmd"
+}
+```
+
+And the device will send a response like that:
+
+`pack`:
+```json
+{
+  "t": "res",
+  "mac": "<MAC address>",
+  "r": 200,
+  "opt": ["time"],
+  "p": ["2018-05-11 19:29:38"],
+  "val": ["2018-05-11 19:29:38"]
+}
+```
 
 ### Remarks
 
