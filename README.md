@@ -61,6 +61,7 @@ I would like to thank the additional work to:
 * [oroce](https://github.com/oroce)
 * [jllcunha](https://github.com/jllcunha)
 * [arthurkrupa](https://github.com/arthurkrupa)
+* [cbalint13](https://github.com/cbalint13)
 
 ## Protocol details
 
