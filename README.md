@@ -62,6 +62,7 @@ I would like to thank the additional work to:
 * [jllcunha](https://github.com/jllcunha)
 * [arthurkrupa](https://github.com/arthurkrupa)
 * [cbalint13](https://github.com/cbalint13)
+* [gurglespuge](https://github.com/gurglespuge)
 
 ## Protocol details
 
@@ -295,7 +296,7 @@ In this object you must define which parameters you are interested in. All of th
 
 * `HeatCoolType`: unknown
 
-* `TemRec`: unknown, probably sets the temperature display mode (indoor, outdoor etc.)
+* `TemRec`: this bit is used to distinguish between two Fahrenheit values (see Setting the temperature using Fahrenheit section below)
 
 * `SvSt`: energy saving mode
   * 0: off
@@ -386,6 +387,32 @@ In this object, `opt` contains the names of the parameters you want to set and `
 ```
 
 In this object, `r` is the response code (not sure if there are other values than 200 because the device won't send you anythin if the request fails), `opt` contains the name of the parameters you set, `p` and `val` contains the values for them.
+
+### Setting the temperature using Fahrenheit
+Two things I found were despite TemUn being set, the set temp is still in Celsius.
+Use the TemRec bit to distinguish between the two Fahrenheit temps
+ 
+`pack`:
+```json
+{
+  "opt": ["TemUn", "SetTem","TemRec"],
+  "p": [1, 27,0],
+  "t": "cmd"
+}
+```
+
+***TempRec TemSet Mapping for setting Fahrenheit***
+
+| Units | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10  | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| Fahrenheit | 68. | 69. | 70. | 71. | 72. | 73. | 74. | 75. | 76. | 77. | 78. |79. | 80. | 81. | 82. | 83. | 84. | 85. | 86. |
+|Celsius |20.0| 20.5| 21.1| 21.6| 22.2| 22.7| 23.3| 23.8| 24.4| 25.0| 25.5| 26.1| 26.6| 27.2| 27.7| 28.3| 28.8| 29.4| 30.0|
+|TemSet |20|   21|   21|   22|   22|   23|   23|   24|  24|   25|   26|   26|   27|  27|   28|   28|   29|   29|  30| 30|
+|TemRec | 1|    0|    1|   0     |    1 |    0 |    1  |    0  |   1 |   1   |  0    |    1|    0|    1|   0|    1|    0|    1|    0|   1|
+
+***Equations***  
+`TemSet = round((desired_temp_f - 32.0) * 5.0 / 9.0)`  
+`TemRec = (int) ((((desired_temp_f - 32.0) * 5.0 / 9.0) - TemSet) > 0)`
 
 ### Scheduling
 
