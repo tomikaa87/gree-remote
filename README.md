@@ -11,6 +11,7 @@ You can find more implementations for other languages and frameworks:
 * OpenHab: https://github.com/jllcunha/openhab-greeair-binding, https://community.openhab.org/t/new-gree-air-conditioner-binding/36429
 * MQTT: https://github.com/arthurkrupa/gree-hvac-mqtt-bridge
 * C#: https://github.com/tomikaa87/gree-remote/tree/master/GreeBlynkBridge
+* Java REST API: https://github.com/alexmuntean/gree-airconditioner-rest
 
 ### Getting started
 
