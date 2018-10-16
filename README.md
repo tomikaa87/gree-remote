@@ -293,7 +293,7 @@ In this object you must define which parameters you are interested in. All of th
   * 0: off
   * 1: on
 
-* `StHt`: unknown
+* `StHt`: maintain the room temperature steadily at 8°C and prevent the room from freezing by heating operation when nobody is at home for long in severe winter (from http://www.gree.ca/en/features)
 
 * `HeatCoolType`: unknown
 
