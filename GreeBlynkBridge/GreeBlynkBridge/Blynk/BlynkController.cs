@@ -15,6 +15,7 @@
         private List<Gree.Controller> deviceControllers;
         private PinConfiguration pinConfig;
         private Gree.Controller selectedDevice;
+        private int selectedDeviceIndex = 0;
 
         public BlynkController(IConfiguration config)
         {
@@ -54,6 +55,23 @@
             this.UpdateSelectedDevice();
         }
 
+        private void SelectNextDevice()
+        {
+            int nextDeviceIndex = this.selectedDeviceIndex + 1;
+            if (nextDeviceIndex >= this.deviceControllers.Count())
+                nextDeviceIndex = 0;
+
+            this.log.LogInformation($"Switching to device: {nextDeviceIndex}");
+
+            this.SelectDevice(nextDeviceIndex);
+
+            this.blynk.SendVirtualPin(new BlynkLibrary.VirtualPin()
+            {
+                Pin = this.pinConfig.DeviceSelector,
+                Value = new List<object>() { this.selectedDeviceIndex + 1 }
+            });
+        }
+
         private async void BlynkVirtualPinReceived(BlynkLibrary.Blynk b, BlynkLibrary.VirtualPinEventArgs e)
         {
             this.log.LogDebug($"Virtual pin received: {e.Data.Pin}={e.Data.Value[0].ToString()}");
@@ -69,6 +87,10 @@
             if (pin == this.pinConfig.DeviceSelector)
             {
                 this.SelectDevice(value - 1);
+            }
+            else if (pin == this.pinConfig.SwitchDevice && value == 1)
+            {
+                SelectNextDevice();
             }
             else
             {
@@ -161,7 +183,8 @@
                 SetHealth = this.ReadPinMappingValue("set-health", config),
                 SetEnergySaving = this.ReadPinMappingValue("set-energy-saving", config),
                 SetLight = this.ReadPinMappingValue("set-light", config),
-                SetAir = this.ReadPinMappingValue("set-air", config)
+                SetAir = this.ReadPinMappingValue("set-air", config),
+                SwitchDevice = this.ReadPinMappingValue("switch-device", config)
             };
 
             this.log.LogDebug(this.pinConfig.ToString());
@@ -261,6 +284,7 @@
             }
 
             this.selectedDevice.DeviceStatusChanged += this.SelectedDeviceStatusChanged;
+            this.selectedDeviceIndex = index;
 
             this.UpdateBlynkValues();
         }

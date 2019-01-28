@@ -46,6 +46,8 @@
         [Pin(Gree.DeviceParameterKeys.AirMode, IsBinary = true)]
         public int SetAir { get; set; }
 
+        public int SwitchDevice { get; set; }
+
         public override string ToString()
         {
             string s = $"\n\nPin configuration:\n";
