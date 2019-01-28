@@ -29,7 +29,8 @@
 			"set-health": 89,
 			"set-energy-saving": 88,
 			"set-light": 87,
-			"set-air": 86
+			"set-air": 86,
+			"switch-device": 85
 		}
 	},
 	
