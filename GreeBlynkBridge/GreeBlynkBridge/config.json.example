@@ -6,6 +6,9 @@
 	"blynk": {
 		"token": "*** your Blynk token ***",
 		
+		"server-address": "*** local server address, or remove this key to use blynk-cloud.com ***",
+		"server-port": "*** local server port, or remove this key to use the default for blynk-cloud.com ***",
+		
 		"devices": [
 			"*** device id 1 ***,
 			"*** device id 2 ***"

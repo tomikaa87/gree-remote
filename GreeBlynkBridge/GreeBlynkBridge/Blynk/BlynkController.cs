@@ -28,7 +28,13 @@
                 throw new ArgumentException("Blynk API token is not configured");
             }
 
-            this.blynk = new BlynkLibrary.Blynk(token, "blynk-cloud.com", 8442);
+            var serverAddress = config["blynk:server-address"] ?? "blynk-cloud.com";
+
+            var serverPort = 8442;
+            if (int.TryParse(config["blynk:server-port"], out var value))
+                serverPort = value;
+
+            this.blynk = new BlynkLibrary.Blynk(token, serverAddress, serverPort);
             this.blynk.VirtualPinReceived += this.BlynkVirtualPinReceived;
             this.blynk.Connect();
         }
