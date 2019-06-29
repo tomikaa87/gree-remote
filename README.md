@@ -267,9 +267,11 @@ In this object you must define which parameters you are interested in. All of th
   * 0: off
   * 1: on
 
-* `SwingLfRig`: controls the swing mode of the horizontal air blades (not available on all units)
+* `SwingLfRig`: controls the swing mode of the horizontal air blades (available on limited number of devices, e.g. some Cooper & Hunter units - thanks to [mvmn](https://github.com/mvmn))
   * 0: default
-  * `TODO:` figure out which are the other possible values 
+  * 1: full swing
+  * 2-6: fixed position from leftmost to rightmost
+  * Full swing, like for SwUpDn is not supported
 
 * `SwUpDn`: controls the swing mode of the vertical air blades
   * 0: default
