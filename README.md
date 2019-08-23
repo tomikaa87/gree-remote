@@ -514,3 +514,13 @@ And the device will send a response like that:
 ### Remarks
 
 For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
+
+### The units talk home to China, what can I do?
+
+The WiFi controller in these devices has the ability to be controlled through the cloud. To be able to do that, they periodically send "heartbeat" packets to Gree servers which are located in China.
+If you are concerned about your privacy and want to block this communication, you have a few ways to do that:
+
+- Block traffic in your firewall from your unit that is going outside from the local network. My units try to connect to `138.91.51.53` to port 5000 TCP. *This method can cause some units to lock up and stop responding to local requests.*
+- Use the dummy server made by [sm4rko](https://github.com/sm4rk0):
+  - [GreeAC-DummyServer](https://github.com/emtek-at/GreeAC-DummyServer)
+  - [GreeAC-ConfigTool](https://github.com/emtek-at/GreeAC-ConfigTool)
