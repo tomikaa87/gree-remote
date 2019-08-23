@@ -521,6 +521,6 @@ The WiFi controller in these devices has the ability to be controlled through th
 If you are concerned about your privacy and want to block this communication, you have a few ways to do that:
 
 - Block traffic in your firewall from your unit that is going outside from the local network. My units try to connect to `138.91.51.53` to port 5000 TCP. *This method can cause some units to lock up and stop responding to local requests.*
-- Use the dummy server made by [sm4rko](https://github.com/sm4rk0):
+- Use the dummy server made by [emtek-at](https://github.com/emtek-at):
   - [GreeAC-DummyServer](https://github.com/emtek-at/GreeAC-DummyServer)
   - [GreeAC-ConfigTool](https://github.com/emtek-at/GreeAC-ConfigTool)
