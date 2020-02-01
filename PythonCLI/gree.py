@@ -120,9 +120,43 @@ def bind_device(search_result):
 def get_param():
     print('Getting parameter: %s' % args.param)
 
+    pack = '{"cols":["%s"],"mac":"%s","t":"status"}' % (args.param, args.id)
+    pack_encrypted = encrypt(pack, args.key)
+
+    request = '{"cid":"app","i":0,"pack":"%s","t":"pack","tcid":"%s","uid":0}' \
+              % (pack_encrypted, args.id)
+
+    result = send_data(args.client, 7000, bytes(request, encoding='utf-8'))
+
+    response = json.loads(result)
+    if response["t"] == "pack":
+        pack = response["pack"]
+
+        pack_decrypted = decrypt(pack, args.key)
+        pack_json = json.loads(pack_decrypted)
+        print('%s = %s' % (args.param, pack_json['dat'][0]))
+
 
 def set_param():
     print('Setting parameter: %s = %s' % (args.param, args.value))
+
+    pack = '{"opt":["%s"],"p":[%s],"t":"cmd"}' % (args.param, args.value)
+    pack_encrypted = encrypt(pack, args.key)
+
+    request = '{"cid":"app","i":0,"pack":"%s","t":"pack","tcid":"%s","uid":0}' \
+              % (pack_encrypted, args.id)
+
+    result = send_data(args.client, 7000, bytes(request, encoding='utf-8'))
+
+    response = json.loads(result)
+    if response["t"] == "pack":
+        pack = response["pack"]
+
+        pack_decrypted = decrypt(pack, args.key)
+        pack_json = json.loads(pack_decrypted)
+
+        if pack_json['r'] != 200:
+            print('Failed to set parameter')
 
 
 if __name__ == '__main__':
