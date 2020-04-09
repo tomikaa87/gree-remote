@@ -5,6 +5,7 @@ This project aims to provide an open-source library for controlling [Gree Smart 
 * ObjectiveC/Cocoa for macOS
 * Java for Android
 * C# for DotNet Core
+* Python 3 ([PythonCLI/gree.py](PythonCLI/gree.py))
 
 You can find more implementations for other languages and frameworks:
 * Java: https://github.com/jllcunha/GreeTest
