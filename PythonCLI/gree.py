@@ -139,7 +139,8 @@ def get_param():
 
         pack_decrypted = decrypt(pack, args.key)
         pack_json = json.loads(pack_decrypted)
-        print('%s = %s' % (args.param, pack_json['dat'][0]))
+        for col, dat in zip(pack_json['cols'], pack_json['dat']):
+            print('%s = %s' % (col, dat))
 
 
 def set_param():
