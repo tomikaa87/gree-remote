@@ -406,6 +406,16 @@ Use the TemRec bit to distinguish between the two Fahrenheit temps
 }
 ```
 
+### Getting the current temperature reading from the internal sensor
+If the device is equipped with a temperature sensor, you can read it via the `TemSen` key.
+The value is in celsius and has an offset of +40 to avoid using negative values.
+For example if you get `65` from the device it means the current temperature is `65 - 40 = 25`.
+
+If you use the `gree.py` script, you can read the sensor like this:
+```
+python3 gree.py -c <device ip> -i <device id> -k <device key> get TemSen
+```
+
 ***TempRec TemSet Mapping for setting Fahrenheit***
 
 | Units | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10  | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 |
