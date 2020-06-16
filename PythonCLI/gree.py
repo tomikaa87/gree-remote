@@ -76,7 +76,9 @@ def search_devices():
     print('Searching for devices using broadcast address: %s' % args.broadcast)
 
     s = socket.socket(type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
-    s.settimeout(3)
+    s.settimeout(5)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     s.sendto(b'{"t":"scan"}', (args.broadcast, 7000))
 
     results = []
