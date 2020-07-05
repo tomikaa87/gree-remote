@@ -25,6 +25,7 @@ class ScanResult:
 def send_data(ip, port, data):
     s = socket.socket(type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
     s.settimeout(5)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.sendto(data, (ip, port))
     return s.recv(1024)
 
