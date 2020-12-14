@@ -120,7 +120,7 @@ def bind_device(search_result):
         pack_decrypted = decrypt_generic(pack)
 
         bind_resp = json.loads(pack_decrypted)
-        if bind_resp["t"] == "bindok":
+        if bind_resp["t"] == "bindOk":
             key = bind_resp['key']
             print('Bind to %s succeeded, key = %s' % (search_result.id, key))
 
