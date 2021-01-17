@@ -20,6 +20,7 @@ import tomikaa.greeremote.Gree.Packs.DatPack;
 import tomikaa.greeremote.Gree.Packs.DevicePack;
 import tomikaa.greeremote.Gree.Packs.ResultPack;
 import tomikaa.greeremote.Gree.Packs.StatusPack;
+import tomikaa.greeremote.Gree.Packs.WifiSettingsPack;
 
 /*
  * This file is part of GreeRemoteAndroid.
@@ -103,6 +104,35 @@ public class DeviceManager {
         pack.mac = packet.tcid;
 
         packet.pack = pack;
+
+        final AsyncCommunicator comm = new AsyncCommunicator(mKeyChain);
+        comm.setCommunicationFinishedListener(new AsyncCommunicationFinishedListener() {
+            @Override
+            public void onFinished() {
+                try {
+                    final Packet[] responses = comm.get();
+
+                    for (Packet response : responses) {
+                        if (mDevices.containsKey(response.cid)) {
+                            mDevices.get(response.cid).updateWithResultPack((ResultPack) response.pack);
+                        }
+                    }
+
+                    sendEvent(DeviceManagerEventListener.Event.DEVICE_STATUS_UPDATED);
+                } catch (Exception e) {
+                    Log.e(LOG_TAG, "Failed to get response of command. Error: " + e.getMessage());
+                }
+            }
+        });
+        comm.execute(new Packet[] { packet });
+    }
+
+
+    public void setWifi(String ssid, String psw){
+
+        WifiSettingsPack packet = new WifiSettingsPack();
+        packet.psw = psw;
+        packet.ssid = ssid;
 
         final AsyncCommunicator comm = new AsyncCommunicator(mKeyChain);
         comm.setCommunicationFinishedListener(new AsyncCommunicationFinishedListener() {

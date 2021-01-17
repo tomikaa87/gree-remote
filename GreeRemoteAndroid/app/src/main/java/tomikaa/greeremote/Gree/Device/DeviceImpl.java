@@ -36,25 +36,24 @@ class DeviceImpl implements Device {
     private final String mLogTag;
 
     public enum Parameter {
-        POWER               ("Pow"),
-        MODE                ("Mod"),
-        TEMPERATURE         ("SetTem"),
-        TEMPERATURE_UNIT    ("TemUn"),
-        FAN_SPEED           ("WdSpd"),
-        AIR_MODE            ("Air"),
-        XFAN_MODE           ("Blo"),
-        HEALTH_MODE         ("Health"),
-        SLEEP_MODE          ("SwhSlp"),
-        QUIET_MODE          ("Quiet"),
-        TURBO_MODE          ("Tur"),
-        SAVING_MODE         ("SvSt"),
-        LIGHT               ("Lig"),
-        HORIZONTAL_SWING    ("SwingLfRig"),
-        VERTICAL_SWING      ("SwUpDn"),
-        STHT_MODE           ("StHt"),
-        HEAT_COOL_TYPE      ("HeatCoolType"),
-        TEM_REC_MODE        ("TemRec")
-        ;
+        POWER("Pow"),
+        MODE("Mod"),
+        TEMPERATURE("SetTem"),
+        TEMPERATURE_UNIT("TemUn"),
+        FAN_SPEED("WdSpd"),
+        AIR_MODE("Air"),
+        XFAN_MODE("Blo"),
+        HEALTH_MODE("Health"),
+        SLEEP_MODE("SwhSlp"),
+        QUIET_MODE("Quiet"),
+        TURBO_MODE("Tur"),
+        SAVING_MODE("SvSt"),
+        LIGHT("Lig"),
+        HORIZONTAL_SWING("SwingLfRig"),
+        VERTICAL_SWING("SwUpDn"),
+        STHT_MODE("StHt"),
+        HEAT_COOL_TYPE("HeatCoolType"),
+        TEM_REC_MODE("TemRec");
 
         private final String mParam;
 
@@ -147,8 +146,8 @@ class DeviceImpl implements Device {
     @Override
     public void setTemperature(int value, TemperatureUnit unit) {
         setParameters(
-                new Parameter[] { Parameter.TEMPERATURE, Parameter.TEMPERATURE_UNIT },
-                new Integer[] { value, unit.ordinal() }
+                new Parameter[]{Parameter.TEMPERATURE, Parameter.TEMPERATURE_UNIT},
+                new Integer[]{value, unit.ordinal()}
         );
     }
 
@@ -260,6 +259,11 @@ class DeviceImpl implements Device {
     @Override
     public void setParameter(String name, int value) {
         mDeviceManager.setParameter(this, name, value);
+    }
+
+    @Override
+    public void setWifiSsidPassword(String ssid, String psw) {
+        mDeviceManager.setWifi(ssid, psw);
     }
 
     @Override

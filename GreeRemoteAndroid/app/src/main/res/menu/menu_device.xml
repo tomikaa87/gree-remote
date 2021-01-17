@@ -5,8 +5,8 @@
     tools:context="tomikaa.greeremote.DeviceActivity">
 
     <item
-        android:id="@+id/action_settings"
+        android:id="@+id/wifi_settings"
         android:orderInCategory="100"
-        android:title="@string/action_settings"
+        android:title="@string/wifi_settings"
         app:showAsAction="never" />
 </menu>

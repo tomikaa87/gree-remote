@@ -1,7 +1,8 @@
 package tomikaa.greeremote;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 /*
  * This file is part of GreeRemoteAndroid.
