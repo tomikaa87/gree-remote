@@ -1,16 +1,24 @@
 package tomikaa.greeremote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import tomikaa.greeremote.Gree.Device.Device;
 import tomikaa.greeremote.Gree.Device.DeviceManager;
@@ -236,6 +244,25 @@ public class DeviceActivity extends AppCompatActivity {
         }
 
         return false;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if(item.getItemId() == R.id.wifi_settings){
+            final View usernamePasswordView = LayoutInflater.from(this).inflate(R.layout.username_password_dialog, null);
+            new AlertDialog.Builder(this).setView(usernamePasswordView)
+                    .setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            TextInputEditText name = usernamePasswordView.findViewById(R.id.name);
+                            TextInputEditText password = usernamePasswordView.findViewById(R.id.password);
+                            Log.d("uriel",name.getText().toString() + " " + password.getText().toString());
+                            mDevice.setWifiSsidPassword(name.getText().toString(),password.getText().toString());
+                        }
+                    }).create().show();
+
+        }
+        return true;
     }
 
     private void setupFanSpeedSeekBarChangeListener() {
