@@ -391,6 +391,9 @@ In this object, `opt` contains the names of the parameters you want to set and `
 ```
 
 In this object, `r` is the response code (not sure if there are other values than 200 because the device won't send you anythin if the request fails]), `opt` contains the name of the parameters you set, `p` and `val` contains the values for them.
+
+Some firmwares may return only one field `p` instead of both `p` and `val`. It is better to handle such cases.
+
 Update: it seems that there are different variants of these Gree devices that properly respond to an invalid packet, probably the newer ones with updated firmware.
 
 ### Setting the temperature using Fahrenheit
