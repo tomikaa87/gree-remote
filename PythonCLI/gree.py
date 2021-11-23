@@ -1,5 +1,7 @@
 import argparse
 import base64
+import sys
+
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 from cryptography.hazmat.backends import default_backend
 import json
@@ -26,6 +28,8 @@ def send_data(ip, port, data):
     s = socket.socket(type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
     s.settimeout(5)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    if args.socket_interface:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, args.socket_interface.encode('ascii'))
     s.sendto(data, (ip, port))
     return s.recv(1024)
 
@@ -80,6 +84,8 @@ def search_devices():
     s.settimeout(5)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    if args.socket_interface:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, args.socket_interface.encode('ascii'))
     s.sendto(b'{"t":"scan"}', (args.broadcast, 7000))
 
     results = []
@@ -190,6 +196,8 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--broadcast', help='Broadcast IP address of the network the devices connecting to')
     parser.add_argument('-i', '--id', help='Unique ID of the device')
     parser.add_argument('-k', '--key', help='Unique encryption key of the device')
+    if sys.platform == 'linux':
+        parser.add_argument('--socket-interface', help='Bind the socket to a specific network interface')
     parser.add_argument('params', nargs='*', default=None, type=str)
 
     args = parser.parse_args()
