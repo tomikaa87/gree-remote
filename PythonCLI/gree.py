@@ -126,9 +126,11 @@ def bind_device(search_result):
 
 
 def get_param():
-    print('Getting parameter: %s' % args.param)
+    print(f'Getting parameters: {", ".join(args.params)}')
 
-    pack = '{"cols":["%s"],"mac":"%s","t":"status"}' % (args.param, args.id)
+    cols = ','.join(f'"{i}"' for i in args.params)
+
+    pack = f'{{"cols":[{cols}],"mac":"{args.id}","t":"status"}}'
     pack_encrypted = encrypt(pack, args.key)
 
     request = '{"cid":"app","i":0,"pack":"%s","t":"pack","tcid":"%s","uid":0}' \
@@ -147,9 +149,20 @@ def get_param():
 
 
 def set_param():
-    print('Setting parameter: %s = %s' % (args.param, args.value))
+    kv_list = [i.split('=') for i in args.params]
+    errors = [i for i in kv_list if len(i) != 2]
 
-    pack = '{"opt":["%s"],"p":[%s],"t":"cmd"}' % (args.param, args.value)
+    if len(errors) > 0:
+        print(f'Invalid parameters detected: {errors}')
+        exit(1)
+
+    print(f'Setting parameters: {", ".join("=".join(i) for i in kv_list)}')
+
+    opts = ','.join(f'"{i[0]}"' for i in kv_list)
+    ps = ','.join(i[1] for i in kv_list)
+
+    pack = f'{{"opt":[{opts}],"p":[{ps}],"t":"cmd"}}'
+    print(pack)
     pack_encrypted = encrypt(pack, args.key)
 
     request = '{"cid":"app","i":0,"pack":"%s","t":"pack","tcid":"%s","uid":0}' \
@@ -177,8 +190,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--broadcast', help='Broadcast IP address of the network the devices connecting to')
     parser.add_argument('-i', '--id', help='Unique ID of the device')
     parser.add_argument('-k', '--key', help='Unique encryption key of the device')
-    parser.add_argument('param', nargs='?', default=None)
-    parser.add_argument('value', nargs='?', default=None)
+    parser.add_argument('params', nargs='*', default=None, type=str)
 
     args = parser.parse_args()
 
@@ -189,14 +201,14 @@ if __name__ == '__main__':
             exit(1)
         search_devices()
     elif command == 'get':
-        if args.param is None or args.client is None or args.key is None or args.id is None:
+        if args.params is None or len(args.params) == 0 or args.client is None or args.id is None or args.key is None:
             print('Error: get command requires a parameter name, a client IP (-c), a device ID (-i) and a device key '
                   '(-k)')
             exit(1)
         get_param()
     elif command == 'set':
-        if args.param is None or args.value is None or args.client is None:
-            print('Error: set command requires a parameter name, a value, a client IP (-c), a device ID (-i) and a '
+        if args.params is None or len(args.params) == 0 or args.client is None or args.id is None or args.key is None:
+            print('Error: set command requires at least one key=value pair, a client IP (-c), a device ID (-i) and a '
                   'device key (-k)')
             exit(1)
         set_param()
