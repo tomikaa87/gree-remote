@@ -104,6 +104,9 @@ def search_devices():
             pack = json.loads(decrypt_generic(resp['pack']))
             results.append(ScanResult(address[0], address[1], pack['cid'], pack['name'] if 'name' in pack else '<unknown>'))
 
+            if args.verbose:
+                print(f'search_devices: resp={resp}, pack={pack}')
+
         except socket.timeout:
             print('Search finished, found %d device(s)' % len(results))
             break
@@ -129,6 +132,10 @@ def bind_device(search_result):
         pack_decrypted = decrypt_generic(pack)
 
         bind_resp = json.loads(pack_decrypted)
+
+        if args.verbose:
+            print(f'bind_device: resp={bind_resp}')
+
         if bind_resp["t"] == "bindok":
             key = bind_resp['key']
             print('Bind to %s succeeded, key = %s' % (search_result.id, key))
@@ -148,11 +155,19 @@ def get_param():
     result = send_data(args.client, 7000, bytes(request, encoding='utf-8'))
 
     response = json.loads(result)
+
+    if args.verbose:
+        print(f'get_param: response={response}')
+
     if response["t"] == "pack":
         pack = response["pack"]
 
         pack_decrypted = decrypt(pack, args.key)
         pack_json = json.loads(pack_decrypted)
+
+        if args.verbose:
+            print(f'get_param: pack={pack}')
+
         for col, dat in zip(pack_json['cols'], pack_json['dat']):
             print('%s = %s' % (col, dat))
 
@@ -180,11 +195,18 @@ def set_param():
     result = send_data(args.client, 7000, bytes(request, encoding='utf-8'))
 
     response = json.loads(result)
+
+    if args.verbose:
+        print(f'set_param: response={response}')
+
     if response["t"] == "pack":
         pack = response["pack"]
 
         pack_decrypted = decrypt(pack, args.key)
         pack_json = json.loads(pack_decrypted)
+
+        if args.verbose:
+            print(f'set_param: pack={pack}')
 
         if pack_json['r'] != 200:
             print('Failed to set parameter')
@@ -199,6 +221,7 @@ if __name__ == '__main__':
     parser.add_argument('-b', '--broadcast', help='Broadcast IP address of the network the devices connecting to')
     parser.add_argument('-i', '--id', help='Unique ID of the device')
     parser.add_argument('-k', '--key', help='Unique encryption key of the device')
+    parser.add_argument('--verbose', help='Enable verbose logging', action='store_true')
     if sys.platform == 'linux':
         parser.add_argument('--socket-interface', help='Bind the socket to a specific network interface')
     parser.add_argument('params', nargs='*', default=None, type=str)
