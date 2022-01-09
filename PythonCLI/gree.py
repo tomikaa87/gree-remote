@@ -102,7 +102,11 @@ def search_devices():
 
             resp = json.loads(data[0:data.rfind(b"}") + 1])
             pack = json.loads(decrypt_generic(resp['pack']))
-            results.append(ScanResult(address[0], address[1], pack['cid'], pack['name'] if 'name' in pack else '<unknown>'))
+
+            cid = pack['cid'] if 'cid' in pack and len(pack['cid']) > 0 else \
+                resp['cid'] if 'cid' in resp else '<unknown-cid>'
+
+            results.append(ScanResult(address[0], address[1], cid, pack['name'] if 'name' in pack else '<unknown>'))
 
             if args.verbose:
                 print(f'search_devices: resp={resp}, pack={pack}')
