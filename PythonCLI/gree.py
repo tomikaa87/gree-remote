@@ -25,10 +25,13 @@ class ScanResult:
 
 
 def send_data(ip, port, data):
+    if args.verbose:
+        print(f'send_data: ip={ip}, port={port}, data={data}')
+
     s = socket.socket(type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
     s.settimeout(5)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    if args.socket_interface:
+    if hasattr(args, 'socket_interface') and args.socket_interface:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, args.socket_interface.encode('ascii'))
     s.sendto(data, (ip, port))
     return s.recv(1024)
@@ -84,7 +87,7 @@ def search_devices():
     s.settimeout(5)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
-    if args.socket_interface:
+    if hasattr(args, 'socket_interface') and args.socket_interface:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, args.socket_interface.encode('ascii'))
     s.sendto(b'{"t":"scan"}', (args.broadcast, 7000))
 
