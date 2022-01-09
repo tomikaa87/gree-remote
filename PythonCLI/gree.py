@@ -136,7 +136,7 @@ def bind_device(search_result):
         if args.verbose:
             print(f'bind_device: resp={bind_resp}')
 
-        if bind_resp["t"] == "bindok":
+        if 't' in bind_resp and bind_resp["t"].lower() == "bindok":
             key = bind_resp['key']
             print('Bind to %s succeeded, key = %s' % (search_result.id, key))
 
