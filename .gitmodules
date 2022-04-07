@@ -7,3 +7,6 @@
 [submodule "GreeLibNG/3rdparty/wolfssl"]
 	path = GreeLibNG/3rdparty/wolfssl
 	url = https://github.com/wolfSSL/wolfssl.git
+[submodule "GreeLibNG/3rdparty/json"]
+	path = GreeLibNG/3rdparty/json
+	url = https://github.com/nlohmann/json.git
