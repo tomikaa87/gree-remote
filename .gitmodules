@@ -4,3 +4,6 @@
 [submodule "GreeBlynkBridge/BlynkLibrary"]
 	path = GreeBlynkBridge/BlynkLibrary
 	url = https://github.com/tomikaa87/BlynkLibrary.git
+[submodule "GreeLibNG/3rdparty/wolfssl"]
+	path = GreeLibNG/3rdparty/wolfssl
+	url = https://github.com/wolfSSL/wolfssl.git
