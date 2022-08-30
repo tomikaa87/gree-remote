@@ -525,9 +525,11 @@ And the device will send a response like that:
 }
 ```
 
-### Remarks
+## Remarks
 
 For the sake of simplicity, you can send device control messages to the broadcast address instead of the IP of the device, because the `tcid` field addresses the device properly. With this little trick you can omit storing IP addresses for specific devices.
+
+Different units have different firmware versions. Some of them have weird limitations. One of these can be a WiFi password length limitation. WPA supports 63-character long passwords, but some units limit this to 31 characters. Please be aware of this issue when your units can't connect to your network.
 
 ### The units talk home to China, what can I do?
 
