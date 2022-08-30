@@ -170,7 +170,7 @@ def get_param():
         pack_json = json.loads(pack_decrypted)
 
         if args.verbose:
-            print(f'get_param: pack={pack}')
+            print(f'get_param: pack={pack}, json={pack_json}')
 
         for col, dat in zip(pack_json['cols'], pack_json['dat']):
             print('%s = %s' % (col, dat))
