@@ -100,7 +100,12 @@ def search_devices():
             if len(data) == 0:
                 continue
 
-            resp = json.loads(data[0:data.rfind(b"}") + 1])
+            raw_json = data[0:data.rfind(b"}") + 1]
+
+            if args.verbose:
+                print(f'search_devices: data={data}, raw_json={raw_json}')
+
+            resp = json.loads(raw_json)
             pack = json.loads(decrypt_generic(resp['pack']))
 
             cid = pack['cid'] if 'cid' in pack and len(pack['cid']) > 0 else \
@@ -109,7 +114,7 @@ def search_devices():
             results.append(ScanResult(address[0], address[1], cid, pack['name'] if 'name' in pack else '<unknown>'))
 
             if args.verbose:
-                print(f'search_devices: resp={resp}, pack={pack}')
+                print(f'search_devices: pack={pack}')
 
         except socket.timeout:
             print('Search finished, found %d device(s)' % len(results))
