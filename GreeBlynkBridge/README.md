@@ -1,6 +1,6 @@
 # GreeBlynkBridge
 
-As its name suggests, Gree Blynk Bridge is a small service written in C# using .NET Core 2.0 that connects a Blynk application to the Gree air conditioner units on the local network.
+As its name suggests, Gree Blynk Bridge is a small service written in C# using .NET Core 6.0 that connects a Blynk application to the Gree air conditioner units on the local network.
 
 ## Creating the database
 
