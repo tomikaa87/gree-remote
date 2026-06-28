@@ -1,7 +1,7 @@
 import argparse
 import base64
+import ipaddress
 import sys
-import re
 
 from Crypto.Cipher import AES
 from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
@@ -128,18 +128,47 @@ def encrypt_GCM_generic(pack):
     return encrypt_GCM(pack, GENERIC_GCM_KEY)
 
 
+def expand_sweep_targets(cidrs):
+    hosts = []
+    for cidr in cidrs:
+        try:
+            network = ipaddress.ip_network(cidr, strict=False)
+        except ValueError as e:
+            print('Error: invalid --sweep network "%s": %s' % (cidr, e))
+            exit(1)
+        if network.num_addresses > 1024:
+            print('Error: --sweep network "%s" is too large (%d addresses). '
+                  'Use a prefix of /22 or smaller.' % (cidr, network.num_addresses))
+            exit(1)
+        hosts.extend(str(host) for host in network.hosts())
+    return hosts
+
+
 def search_devices():
-    print('Searching for devices using broadcast address: %s' % args.broadcast)
+    # Broadcast only reaches the local subnet (routers don't forward it); a
+    # unicast --sweep additionally probes every host of a routable CIDR.
+    sweep_hosts = expand_sweep_targets(args.sweep) if args.sweep else []
+
+    if args.broadcast:
+        print('Searching for devices using broadcast address: %s' % args.broadcast)
+    if sweep_hosts:
+        print('Sweeping %d address(es) via unicast: %s' % (len(sweep_hosts), ', '.join(args.sweep)))
 
     s = socket.socket(type=socket.SOCK_DGRAM, proto=socket.IPPROTO_UDP)
     s.settimeout(5)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
+    if args.broadcast:
+        s.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
     if hasattr(args, 'socket_interface') and args.socket_interface:
         s.setsockopt(socket.SOL_SOCKET, socket.SO_BINDTODEVICE, args.socket_interface.encode('ascii'))
-    s.sendto(b'{"t":"scan"}', (args.broadcast, 7000))
+
+    if args.broadcast:
+        s.sendto(b'{"t":"scan"}', (args.broadcast, 7000))
+    for host in sweep_hosts:
+        s.sendto(b'{"t":"scan"}', (host, 7000))
 
     results = []
+    seen = set()
 
     while True:
         try:
@@ -167,14 +196,23 @@ def search_devices():
 
             pack = json.loads(decrypted_pack)
 
+            # Some firmware leaves 'cid' empty and only reports the id in 'mac'.
+            # The id used for binding and status requests is the MAC address, so
+            # fall back to it when no usable 'cid' is present.
             cid = pack['cid'] if 'cid' in pack and len(pack['cid']) > 0 else \
-                resp['cid'] if 'cid' in resp else '<unknown-cid>'
+                resp['cid'] if 'cid' in resp and len(resp['cid']) > 0 else \
+                pack['mac'] if 'mac' in pack and len(pack['mac']) > 0 else '<unknown-cid>'
 
-            if encryption_type != 'GCM' and 'ver' in pack:
-                ver = re.search(r'(?<=V)[0-9]+(?<=.)', pack['ver'])
-                if int(ver.group(0)) >= 2:
-                    print('Set GCM encryption because version in search responce is 2 or later')
-                    encryption_type = 'GCM';
+            # The firmware version is not a reliable indicator of the encryption
+            # type (e.g. some V3.0.0 units still use ECB). The actual type is
+            # probed at bind time: ECB is tried first, falling back to GCM on
+            # timeout. A 'tag' in the scan response already forced GCM above.
+
+            # A unicast sweep may overlap a broadcast, so ignore duplicate replies.
+            dedup_key = cid if cid != '<unknown-cid>' else address[0]
+            if dedup_key in seen:
+                continue
+            seen.add(dedup_key)
 
             results.append(ScanResult(address[0], address[1], cid, pack['name'] if 'name' in pack else '<unknown>', encryption_type))
 
@@ -324,6 +362,9 @@ if __name__ == '__main__':
     parser.add_argument('command', help='You can use the following commands: search, get, set')
     parser.add_argument('-c', '--client', help='IP address of the client device')
     parser.add_argument('-b', '--broadcast', help='Broadcast IP address of the network the devices connecting to')
+    parser.add_argument('--sweep', action='append', metavar='CIDR',
+                        help='Discover devices on a routable subnet that broadcast cannot reach, by '
+                             'unicasting the scan to every host in CIDR (e.g. 192.168.0.0/24). Repeatable.')
     parser.add_argument('-i', '--id', help='Unique ID of the device (mac address)')
     parser.add_argument('-k', '--key', help='Unique encryption key of the device')
     parser.add_argument('-e', '--encryption', help='Set the encryption type AES128 used: ECB(default), GCM')
@@ -341,8 +382,8 @@ if __name__ == '__main__':
 
     command = args.command.lower()
     if command == 'search':
-        if args.broadcast is None:
-            print('Error: search command requires a broadcast IP address')
+        if args.broadcast is None and not args.sweep:
+            print('Error: search command requires a broadcast IP address (-b) or a --sweep CIDR')
             exit(1)
         search_devices()
     elif command == 'get':
